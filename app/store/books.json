@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "author": "John Doe",
+    "title": "The Catcher in the Rye",
+    "genre": "Fiction",
+    "description": "The novel follows the protagonist, Jane Austen, as she navigates the",
+    "publication_year": 1951,
+    "image_url": "http://",
+    "price": 39.99
+  },
+  {
+    "id": 2,
+    "author": "Jane Austen",
+    "title": "Pride and Prejudice",
+    "genre": "Fiction",
+    "publication_year": 1813,
+    "image_url": "http://",
+    "description": "The novel follows the protagonist, Jane Austen, as she navigates the",
+    "price": 59.99
+  },
+  {
+    "id": "3",
+    "author": "Charles Dickens",
+    "title": "Great Expectations",
+    "genre": "Fiction",
+    "publication_year": 1815,
+    "image_url": "http://",
+    "description": "The novel follows the protagonist, Jane Austen, as she navigates the",
+    "price": 59.99
+  }
+]
