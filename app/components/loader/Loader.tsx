@@ -1,13 +1,11 @@
 import React from "react";
 import { ClipLoader } from "react-spinners";
-import Modal from "../Modal/Modal";
-type Props = {};
 
-const Loader = (props: Props) => {
+const Loader = ({ size = 120, color = "#123abc" }) => {
   return (
-    <Modal width={"300"} height={"300"} top={0} left={0} right={0} bottom={0}>
-      <ClipLoader className="w-full h-full object-cover"></ClipLoader>
-    </Modal>
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <ClipLoader size={size} color={color} />
+    </div>
   );
 };
 

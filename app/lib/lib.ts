@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { Collection, Db } from "mongodb";
 import clientPromise from "./mongodb";
+import { compare } from "bcrypt";
+import bcrypt from "bcrypt";
 let client;
 let db: Db;
 let users: Collection;
@@ -37,24 +39,24 @@ export const decrypt = async (input: string): Promise<any> => {
 };
 
 export async function login(formData: FormData) {
-  // Validate user credentials
-  const user = {
-    email: formData.get("email") || "",
-    password: formData.get("password") || "",
-  };
-  const email = user.email;
   await connect();
-  const userExists = db.collection("users").find({ email });
-  if (userExists) {
+  const email = formData.get("email") || "";
+  const password = formData.get("password") || "";
+
+  const user = await users.findOne({ email: email });
+
+  if (user && (await compare(password, user.password))) {
     // Create session
     const expires = new Date(Date.now() + 10 * 1000);
-    const session = await encrypt({ user, expires });
+    const session = await encrypt({ email, expires });
     // Save the session in the cookie
     cookies().set("session", session, { expires: new Date(0), httpOnly: true });
-    return session;
+    return { token: session };
   }
-  throw new Error(`User ${user.email} already exists`);
+
+  console.error("Invalid email or password");
 }
+
 export const logout = async () => {
   // Destroy the session
   cookies().set("session", "", { expires: new Date(0) });
@@ -89,22 +91,32 @@ export const updateSessions = async (request: NextRequest) => {
 
 export const register = async (formData: FormData) => {
   try {
-    const options = {
-      method: "POST",
-      body: JSON.stringify({
-        email: formData.get("email"),
-        password: formData.get("password"),
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+    await connect();
+    const user = {
+      email: formData.get("email") || "",
+      password: formData.get("password") || "",
     };
+    if (!user.email || !user.password) {
+      throw new Error("Email and password are required");
+    }
+    const existingUser = await users.findOne({ email: user.email });
+    if (existingUser) {
+      throw new Error("That email is already registered");
+    }
+    const hashedPassword = await bcrypt.hash(user?.password, 10);
+    const createdUser = {
+      email: user.email,
+      password: hashedPassword,
+      createdAt: new Date(Date.now()),
+    };
+    const insertData = await users.insertOne(createdUser);
     const response = await fetch("http://localhost:3000/api/register", options);
     if (!response.ok) {
       throw new Error(
         `Error while registering ${response.status}: ${response.statusText}`
       );
     }
+
     const data = await response.json();
     console.log(data);
     return data;
