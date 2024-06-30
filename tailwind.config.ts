@@ -33,10 +33,11 @@ const config: Config = {
       gridTemplateColumns: {
         bestseller_grid: "repeat(3, minmax(0, 1fr))",
         book_preview_grid: "minmax(0,300px), minmax(auto,1fr)",
-        register_grid: "minmax(auto,500px) minmax(0,1fr)",
+        register_grid: "minmax(auto,600px) minmax(0,1fr)",
       },
       fontFamily: {
-        robotoSzef: ["var(--font-dancingScript)"],
+        robotoSzef: "var(--font-dancingScript)",
+        roboto: "var(--font-roboto)",
       },
       colors: {
         midnight_green: {
