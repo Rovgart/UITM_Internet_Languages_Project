@@ -10,7 +10,7 @@ type HamburgerProps = {
 const Hamburger = ({ closeHandler, hamburgerState }: HamburgerProps) => {
   return (
     <nav
-      className={`md:hidden fixed top-0 ${
+      className={`md:hidden fixed top-0 z-[99999] ${
         hamburgerState ? "left-[0]" : "left-[-300px]"
       }
       }] sm:w-1/3 w-1/2 text-xl text-midnight_green-900 flex flex-col gap-4 pl-3 pt-3 h-screen bg-midnight_green-200`}

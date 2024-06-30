@@ -6,6 +6,7 @@ import booksSVG from "../images/books.svg";
 import Image from "next/image";
 import { login, register } from "@/lib/lib";
 import { redirect } from "next/navigation";
+import SubmitButton from "@/components/buttons/SubmitButton";
 type Props = {};
 const dancingScript = Dancing_Script({
   subsets: ["latin"],
@@ -20,7 +21,7 @@ const roboto = Roboto({
 const SignUp = () => {
   return (
     <main className="min-h-[88vh] grid sm:grid-cols-register_grid overflow-hidden">
-      <div className="sm:flex w-screen sm:w-auto sm:items-center sm:justify-around flex-col flex gap-5  relative bg-reseda_green-900 text-reseda_green-500 h-full">
+      <div className="sm:flex w-screen sm:w-auto sm:items-center sm:justify-around flex-col flex gap-5  relative bg-reseda_green-900 text-reseda_green-500 h-full justify-center">
         {/* Logo Section */}
         <div className="flex flex-col items-center gap-2">
           <picture>
@@ -35,7 +36,7 @@ const SignUp = () => {
           <h1
             className={`text-6xl ${dancingScript.variable} font-robotoSzef text-midnight_green-600`}
           >
-            BookJourney
+            Bookjourney
           </h1>
           <h1
             className={` ${roboto.variable} font-roboto text-xl text-midnight_green-600`}
@@ -47,10 +48,10 @@ const SignUp = () => {
         <form
           action={async (formData: FormData) => {
             "use server";
-            await register(formData);
-            redirect("/");
+            const RegisterValid = await register(formData);
+            return RegisterValid;
           }}
-          className="flex sm:w-1/2 items-center sm:justify-center  flex-col gap-4"
+          className="flex sm:w-1/2 w-full items-center sm:justify-center  flex-col gap-4"
         >
           <TextField
             id="outlined-basic"
@@ -67,18 +68,12 @@ const SignUp = () => {
             label="Password"
             variant="outlined"
           />
-          <Button
-            variant="contained"
-            className="bg-midnight_green-700 w-1/2 sm:w-full hover:bg-maize-200"
-            type="submit"
-          >
-            Sign In
-          </Button>
+          <SubmitButton />
         </form>
         {/* Social Media Sign In */}
-        <span className="absolute bottom-0">
-          Already have an account?{" "}
-          <Link className="text-color_1" href={"/"}>
+        <span className="absolute bottom-0 pb-2 flex justify-center gap-1 italic tracking-tight">
+          Already have an account ?
+          <Link className="tracking-tight text-midnight_green-00" href={"/"}>
             Log In
           </Link>
         </span>

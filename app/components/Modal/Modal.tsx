@@ -24,11 +24,11 @@ const Modal = ({
   bottom?: number;
 }) => {
   return (
-    <div className="">
+    <div className="relative">
       <Backdrop />
 
       <div
-        className={` animate-[slideFromBottom_0.3s_ease_in_out] w-[${width}] z-[1000] h-[${height}] relative top-[${top}] right-[${right}] left-[${left}] bottom-[${bottom}] bg-white border-slate-500 `}
+        className={`fixed animate-[slideFromBottom_0.3s_ease_in_out] w-[${width}] z-[1000] h-[${height}] relative top-[${top}] right-[${right}] left-[${left}] bottom-[${bottom}] bg-white border-slate-500 `}
       >
         <div className="bg-midnight_green-500 text-midnight_green-900 w-screen fixed bottom-0  ">
           {children}
