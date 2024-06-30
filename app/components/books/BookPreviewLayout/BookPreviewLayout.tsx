@@ -27,7 +27,7 @@ const BookPreviewLayout = ({
           ></img>
         </picture>
         {/* Book Informations */}
-        <aside className=" w-1/2 p-8 flex items flex-col gap-5 sm:gap-2 justify-around border border-slate-500 text-center sm:text-start">
+        <aside className=" sm:w-1/2 w-full p-8 flex items flex-col gap-5 sm:gap- justify-around border  text-center sm:text-start">
           {/* Book Title */}
           <div>
             <h2 className="text-4xl font-robotoSzef">{bookTitle}</h2>

@@ -3,9 +3,26 @@ import { jwtDecrypt, JWTPayload, jwtVerify, SignJWT } from "jose";
 import { KeyLike } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-
+import { Collection, Db } from "mongodb";
+import clientPromise from "./mongodb";
+let client;
+let db: Db;
+let users: Collection;
 const SECRET_KEY = "secret";
 const key = new TextEncoder().encode(SECRET_KEY);
+export async function connect() {
+  if (db) return;
+  try {
+    client = await clientPromise;
+    db = client.db("BookStore");
+    users = db.collection("users");
+  } catch (err: any) {
+    console.error(err.message);
+  }
+}
+(async () => {
+  await connect();
+})();
 export const encrypt = async (payload: JWTPayload) => {
   const encoded = await new SignJWT(payload)
     .setIssuedAt()
@@ -22,14 +39,21 @@ export const decrypt = async (input: string): Promise<any> => {
 export async function login(formData: FormData) {
   // Validate user credentials
   const user = {
-    email: formData.get("email"),
-    password: formData.get("password"),
+    email: formData.get("email") || "",
+    password: formData.get("password") || "",
   };
-  // Create session
-  const expires = new Date(Date.now() + 10 * 1000);
-  const session = await encrypt({ user, expires });
-  // Save the session in the cookie
-  cookies().set("session", session, { expires: new Date(0), httpOnly: true });
+  const email = user.email;
+  await connect();
+  const userExists = db.collection("users").find({ email });
+  if (userExists) {
+    // Create session
+    const expires = new Date(Date.now() + 10 * 1000);
+    const session = await encrypt({ user, expires });
+    // Save the session in the cookie
+    cookies().set("session", session, { expires: new Date(0), httpOnly: true });
+    return session;
+  }
+  throw new Error(`User ${user.email} already exists`);
 }
 export const logout = async () => {
   // Destroy the session
