@@ -7,6 +7,7 @@ import { Collection, Db } from "mongodb";
 import clientPromise from "./mongodb";
 import { compare } from "bcrypt";
 import bcrypt from "bcrypt";
+
 let client;
 let db: Db;
 let users: Collection;
@@ -51,7 +52,7 @@ export async function login(formData: FormData) {
     const session = await encrypt({ email, expires });
     // Save the session in the cookie
     cookies().set("session", session, { expires: new Date(0), httpOnly: true });
-    return { token: session };
+    return { token: session, user: user };
   }
 
   console.error("Invalid email or password");
@@ -59,7 +60,7 @@ export async function login(formData: FormData) {
 
 export const logout = async () => {
   // Destroy the session
-  cookies().set("session", "", { expires: new Date(0) });
+  cookies().set("session", "", { expires: new Date(Date.now() + 15000) });
 };
 
 export const getSession = async () => {
@@ -103,23 +104,18 @@ export const register = async (formData: FormData) => {
     if (existingUser) {
       throw new Error("That email is already registered");
     }
-    const hashedPassword = await bcrypt.hash(user?.password, 10);
+    const hashedPassword = await bcrypt.hash(user.password, 10);
     const createdUser = {
       email: user.email,
       password: hashedPassword,
       createdAt: new Date(Date.now()),
     };
     const insertData = await users.insertOne(createdUser);
-    const response = await fetch("http://localhost:3000/api/register", options);
-    if (!response.ok) {
-      throw new Error(
-        `Error while registering ${response.status}: ${response.statusText}`
-      );
+    const LoginValid = await login(formData);
+    if (!LoginValid) {
+      throw new Error("Failed to register user");
     }
-
-    const data = await response.json();
-    console.log(data);
-    return data;
+    console.log("Successfully registered");
   } catch (error: any) {
     console.error(error.message);
   }

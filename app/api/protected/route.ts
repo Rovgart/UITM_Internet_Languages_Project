@@ -1,17 +1,27 @@
+import { getSession } from "@/lib/lib";
+import { KeyLike } from "crypto";
 import { jwtVerify } from "jose";
+import { NextRequest, NextResponse } from "next/server";
 
-const SECRET_KEY = "SECRET_KEY";
-export default function POST(req, res) {
-  const { token } = req.cookies;
+const SECRET_KEY = "SECRET_KEY" as KeyLike;
+export default async function POST(req: NextRequest, res: NextResponse) {
+  const token = await getSession();
 
   if (!token) {
-    return res.status(401).json({ error: "Authentication required" });
+    return NextResponse.json({ message: "Need authorization", status: 401 });
   }
 
   try {
     const decoded = jwtVerify(token, SECRET_KEY);
-    return res.status(200).json({ message: "Protected Data", user: decoded });
+    return NextResponse.json({
+      message: "Session exists",
+      status: 200,
+      token: decoded,
+    });
   } catch (error) {
-    return res.status(401).json({ message: "Invalid or expired token" });
+    return NextResponse.json({
+      message: "Invalid token or expired",
+      status: 401,
+    });
   }
 }

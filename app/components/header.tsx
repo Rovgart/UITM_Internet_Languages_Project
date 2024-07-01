@@ -5,6 +5,8 @@ import React, { ReactNode, useState } from "react";
 import { CiShoppingCart } from "react-icons/ci";
 import Hamburger from "./hamburger/Hamburger";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { CiSearch } from "react-icons/ci";
+import { TextField } from "@mui/material";
 type Props = {};
 const lato = Lato({ subsets: ["latin"], weight: "400" });
 const roboto = Dancing_Script({
@@ -41,10 +43,10 @@ const Header = ({
           closeHandler={() => setIsOpened(false)}
         />
         <nav className="flex items-center order-2 sm:order-3">
-          <div className="size-10 cursor-pointer rounded-full overflow-hidden flex justify-center items-center bg-reseda_green-900">
-            <CiShoppingCart size={"3rem"} />
-            <h1>{/*Some Cart Prop for product count */}</h1>
-          </div>
+          <form action={""}>
+            <CiSearch className="sm:hidden" size={"3rem"} />
+            <TextField variant="outlined" type={"text"} />
+          </form>
         </nav>
         {/* Hamburger icon */}
         <GiHamburgerMenu
