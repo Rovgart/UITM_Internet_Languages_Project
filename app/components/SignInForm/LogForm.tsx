@@ -13,7 +13,28 @@ const roboto = Dancing_Script({
   weight: "400",
   variable: "--font-dancingScript",
 });
-
+const fetchUser = async (user_id: string) => {
+  try {
+    const response = await fetch("http://localhost:3000/api/get_user", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies().get("session")}`,
+      },
+      method: "POST",
+      body: JSON.stringify(user_id),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Invalid user ID: ${response.status}:${response.statusText}`
+      );
+    }
+    const user = await response.json();
+    console.log(user);
+    return user;
+  } catch (error: any) {
+    console.error(error?.message);
+  }
+};
 const LogForm = () => {
   return (
     <>
@@ -28,10 +49,11 @@ const LogForm = () => {
           const LoginValid = await login(formData);
           if (LoginValid) {
             console.log(LoginValid);
-            cookies().set("session", LoginValid?.token, {
-              expires: new Date(0),
+            cookies().set("session", LoginValid.token, {
+              expires: new Date(Date.now() + 150000),
               httpOnly: true,
             });
+            redirect("/");
           }
         }}
         className={` ${roboto.className} font-robotoSzef flex flex-col items-center justify-around gap-6 p-6 border border-slate-500 rounded-lg size-2/3 mx-auto bg-midnight_green-600 shadow-md shadow-black`}

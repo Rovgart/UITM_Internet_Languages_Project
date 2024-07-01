@@ -7,6 +7,8 @@ import Image from "next/image";
 import { login, register } from "@/lib/lib";
 import { redirect } from "next/navigation";
 import SubmitButton from "@/components/buttons/SubmitButton";
+import { cookies } from "next/headers";
+import { getUser } from "@/lib/users";
 type Props = {};
 const dancingScript = Dancing_Script({
   subsets: ["latin"],
@@ -18,6 +20,7 @@ const roboto = Roboto({
   weight: "400",
   variable: "--font-roboto",
 });
+
 const SignUp = () => {
   return (
     <main className="min-h-[88vh] grid sm:grid-cols-register_grid overflow-hidden">
@@ -49,7 +52,20 @@ const SignUp = () => {
           action={async (formData: FormData) => {
             "use server";
             const RegisterValid = await register(formData);
-            return RegisterValid;
+            await new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve(true);
+              }, 3000);
+            });
+            if (RegisterValid) {
+              cookies().set("session", RegisterValid.token, {
+                httpOnly: true,
+                expires: new Date(0),
+                sameSite: true,
+              });
+              console.log(RegisterValid);
+              redirect("/");
+            }
           }}
           className="flex sm:w-1/2 w-full items-center sm:justify-center  flex-col gap-4"
         >
