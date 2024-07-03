@@ -14,10 +14,6 @@ const fetchBestsellers = async (): Promise<BestsellersResponse[]> => {
     if (data) {
       const bestsellers = data.map((book) => {
         const genreArr = book.genre.split(",");
-        console.log(book);
-        console.log(book.genre);
-        console.log(book.author);
-        console.log(genreArr);
         const bestsellersObj = {
           id: book._id,
           title: book.title,
