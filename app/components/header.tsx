@@ -7,6 +7,7 @@ import Hamburger from "./hamburger/Hamburger";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CiSearch } from "react-icons/ci";
 import { TextField } from "@mui/material";
+import Search from "./search/search";
 type Props = {};
 const lato = Lato({ subsets: ["latin"], weight: "400" });
 const roboto = Dancing_Script({
@@ -21,37 +22,46 @@ const Header = ({
   children: ReactNode;
   auth: ReactNode;
 }) => {
-  const [isOpened, setIsOpened] = useState(false);
+  const [headerState, setHeaderState] = useState({
+    hamburgerState: false,
+    searchState: false,
+  });
+  const { hamburgerState, searchState } = headerState;
   return (
     <div className={lato.className}>
-      <header className="bg-midnight_green px-5 text-midnight_green-900 min-h-[12vh] flex justify-around items-center">
-        <picture className="order-1  flex  flex-col justify-center items-center  bg-reseda_green-700">
+      <header className="bg-midnight_green px-5 text-midnight_green-900 min-h-[12vh] flex justify-around items-center fixed top-0 w-full">
+        <picture
+          className={`${
+            searchState ? "hidden" : "block"
+          } order-1  flex  flex-col justify-center items-center  bg-reseda_green-700`}
+        >
           <span
             className={`${roboto.variable} tracking-wide font-robotoSzef text-[2em] flex items-center justify-center  font-semibold`}
           >
             Bookjourney
           </span>
         </picture>
-        <nav className="md:flex gap-3 order-3 sm:order-2 hidden">
+        <nav className={`md:flex gap-3 order-3 sm:order-2 hidden`}>
           <Link href={"/"}>Home</Link>
           <Link href={"/About"}>About</Link>
           <Link href={"/login"}>SignIn</Link>
           <Link href={"/signup"}>SignUp</Link>
         </nav>
         <Hamburger
-          hamburgerState={isOpened}
-          closeHandler={() => setIsOpened(false)}
+          hamburgerState={hamburgerState}
+          closeHandler={() => setHeaderState({ hamburgerState: false })}
         />
-        <nav className="flex items-center order-2 sm:order-3">
-          <form action={""}>
-            <CiSearch className="sm:hidden" size={"3rem"} />
-            <TextField variant="outlined" type={"text"} />
-          </form>
+        <nav
+          className={` ${
+            searchState ? "hidden" : "block"
+          } flex items-center order-2 sm:order-3`}
+        >
+          {/* Hamburger icon */}
+          <Search searchStateProp={searchState} />
         </nav>
-        {/* Hamburger icon */}
         <GiHamburgerMenu
           className="md:hidden text-3xl "
-          onClick={() => setIsOpened(true)}
+          onClick={() => setHeaderState({ hamburgerState: true })}
         />
       </header>
     </div>
