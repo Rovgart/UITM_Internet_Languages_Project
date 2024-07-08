@@ -2,7 +2,8 @@
 import { TextField, useMediaQuery } from "@mui/material";
 import React, { ReactEventHandler, useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-const Search = ({ searchStateProp }: { searchStateProp: boolean }) => {
+import SearchResult from "./searchResult";
+const Search = async ({ searchStateProp }: { searchStateProp: boolean }) => {
   const [query, setQuery] = useState("");
   const [inputStatus, setInputStatus] = useState({
     isTyping: false,
@@ -83,7 +84,7 @@ const Search = ({ searchStateProp }: { searchStateProp: boolean }) => {
       <TextField
         className={` ${
           isOpened
-            ? "absolute top-0 right-0 h-[12vh] w-screen z-[9999px]"
+            ? "absolute top-0 right-0 sm:h-[12vh] h-screen w-screen z-[9999px]"
             : "hidden"
         } text-white bg-midnight_green-900`}
         variant="outlined"
@@ -94,6 +95,7 @@ const Search = ({ searchStateProp }: { searchStateProp: boolean }) => {
         onChange={(e) => onChangeSearch(e)}
       />
       {!isValid && !isTyping && <p>Please enter a search query</p>}
+      {fetchBook.length > 0 && <SearchResult searchedBooks={fetchBook} />}
     </form>
   );
 };
