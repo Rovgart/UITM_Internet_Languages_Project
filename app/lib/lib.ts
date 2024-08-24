@@ -39,14 +39,13 @@ export const decrypt = async (input: string): Promise<any> => {
   return payload;
 };
 
-export async function login(formData: FormData) {
+export async function login(user: { username: string; password: string }) {
   await connect();
-  const email = formData.get("email") || "";
-  const password = formData.get("password") || "";
+  const { email, password } = user;
 
-  const user = await users.findOne({ email: email });
+  const userExist = await users.findOne({ email: email });
 
-  if (user && (await compare(password, user.password))) {
+  if (userExist && (await compare(password, user.password))) {
     // Create session
     const expires = new Date(Date.now() + 10 * 1000);
     const session = await encrypt({ email, expires });
@@ -112,9 +111,7 @@ export const register = async (formData: FormData) => {
     };
     const insertData = await users.insertOne(createdUser);
     const LoginValid = await login(formData);
-    if (!LoginValid) {
-      throw new Error("Failed to register user");
-    }
+
     console.log("Successfully registered");
   } catch (error: any) {
     console.error(error.message);

@@ -1,13 +1,11 @@
 "use client";
-import { Dancing_Script, Lato, Roboto_Mono } from "next/font/google";
+import { Dancing_Script, Lato } from "next/font/google";
 import Link from "next/link";
 import React, { ReactNode, useState } from "react";
-import { CiShoppingCart } from "react-icons/ci";
 import Hamburger from "./hamburger/Hamburger";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { CiSearch } from "react-icons/ci";
-import { TextField } from "@mui/material";
 import Search from "./search/search";
+import { routes } from "constants/routes";
 type Props = {};
 const lato = Lato({ subsets: ["latin"], weight: "400" });
 const roboto = Dancing_Script({
@@ -19,8 +17,8 @@ const Header = ({
   children,
   auth,
 }: {
-  children: ReactNode;
-  auth: ReactNode;
+  children?: ReactNode;
+  auth?: ReactNode;
 }) => {
   const [headerState, setHeaderState] = useState({
     hamburgerState: false,
@@ -29,7 +27,7 @@ const Header = ({
   const { hamburgerState, searchState } = headerState;
   return (
     <div className={lato.className}>
-      <header className="bg-midnight_green px-5 text-midnight_green-900 min-h-[12vh] flex justify-around items-center fixed top-0 w-full">
+      <header className="bg-midnight_green p-5 text-midnight_green-900 flex justify-around items-center  w-full">
         <picture
           className={`${
             searchState ? "hidden" : "block"
@@ -42,10 +40,10 @@ const Header = ({
           </span>
         </picture>
         <nav className={`md:flex gap-3 order-3 sm:order-2 hidden`}>
-          <Link href={"/"}>Home</Link>
-          <Link href={"/About"}>About</Link>
-          <Link href={"/login"}>SignIn</Link>
-          <Link href={"/signup"}>SignUp</Link>
+          <Link href={routes.home}>Home</Link>
+          <Link href={routes.about}>About</Link>
+          <Link href={routes.signIn}>Sign In</Link>
+          <Link href={routes.signUp}>Sign Up</Link>
         </nav>
         <Hamburger
           hamburgerState={hamburgerState}
@@ -57,7 +55,7 @@ const Header = ({
           } flex items-center order-2 sm:order-3`}
         >
           {/* Hamburger icon */}
-          <Search searchStateProp={searchState} />
+          {/* <Search searchStateProp={searchState} /> */}
         </nav>
         <GiHamburgerMenu
           className="md:hidden text-3xl "
