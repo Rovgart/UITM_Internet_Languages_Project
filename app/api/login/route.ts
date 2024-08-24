@@ -1,18 +1,27 @@
-import { getBook } from "@/lib/books";
 import { login } from "@/lib/lib";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json(); // Ensure you are destructuring the book_id from the JSON body
-    const data = await login(book_id);
+    const { email, password } = await req.json(); // Destructure email and password from the JSON body
+    const user = {
+      email: email,
+      password: password,
+    };
+    // Call the login function with email and password
+    const data = await login(user);
+    console.log(data);
+
     if (data) {
-      console.log(data);
-      return NextResponse.json(data); // Return the data as a JSON response
+      return NextResponse.json({ token: data.token }); // Return the data as a JSON response
     } else {
-      return NextResponse.json({ message: "Book not found" }, { status: 404 }); // Handle case where book is not found
+      return NextResponse.json(
+        { message: "Invalid credentials" },
+        { status: 401 }
+      ); // Handle case where login fails
     }
   } catch (error: any) {
+    console.error("Error during login:", error);
     return NextResponse.json({ message: error.message }, { status: 500 }); // Return the error message with a 500 status code
   }
 }
