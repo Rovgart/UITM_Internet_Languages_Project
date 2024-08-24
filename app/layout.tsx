@@ -4,6 +4,7 @@ import CookiePopUp from "./components/Cookie/CookiePopUp";
 import Header from "./components/header";
 import "./globals.css";
 import { cn } from "./utils/cn";
+import { Toaster } from "react-hot-toast";
 
 const lato = Lato({ subsets: ["latin"], weight: "400" });
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Toaster />
         <Header />
         {children}
         <CookiePopUp></CookiePopUp>

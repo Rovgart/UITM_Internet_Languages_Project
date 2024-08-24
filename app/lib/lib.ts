@@ -39,22 +39,26 @@ export const decrypt = async (input: string): Promise<any> => {
   return payload;
 };
 
-export async function login(user: { username: string; password: string }) {
+export async function login(user: { email: string; password: string }) {
   await connect();
   const { email, password } = user;
+  console.log(user);
+  const userExist = await users.findOne({ email: user.email });
 
-  const userExist = await users.findOne({ email: email });
-
-  if (userExist && (await compare(password, user.password))) {
+  if (userExist && (await compare(password, userExist.password))) {
     // Create session
     const expires = new Date(Date.now() + 10 * 1000);
     const session = await encrypt({ email, expires });
     // Save the session in the cookie
-    cookies().set("session", session, { expires: new Date(0), httpOnly: true });
-    return { token: session, user: user };
+    cookies().set("session", session, {
+      expires: expires,
+      httpOnly: true,
+    });
+    return { token: session, user: userExist };
   }
 
   console.error("Invalid email or password");
+  return null;
 }
 
 export const logout = async () => {
@@ -109,8 +113,6 @@ export const register = async (formData: FormData) => {
       password: hashedPassword,
       createdAt: new Date(Date.now()),
     };
-    const insertData = await users.insertOne(createdUser);
-    const LoginValid = await login(formData);
 
     console.log("Successfully registered");
   } catch (error: any) {
