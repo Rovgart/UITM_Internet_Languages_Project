@@ -3,6 +3,16 @@ import React from "react";
 import StarRating from "../StarRating/StarRating";
 import { Roboto_Mono } from "next/font/google";
 import PreviewButton from "../buttons/PreviewButton";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Typography,
+} from "@mui/material";
+import { cn } from "@/utils/cn";
 export type BookItemProps = {
   bookId: string;
   bookTitle: string;
@@ -21,37 +31,32 @@ const BookItem = ({
   bookAuthor,
   bookRating,
   bookGenres,
+  bookDescription,
 }: BookItemProps) => {
   // const price = `${bookPrice.toFixed(2)} zl`;
+  const getFirstSentence = (bookDesc: string) => {
+    const firstSentenceEnd = bookDesc.indexOf(".") + 1;
+    if (firstSentenceEnd === 0) return bookDesc;
+    return bookDesc.substring(0, firstSentenceEnd);
+  };
   return (
-    <div
-      className={` flex p-8 bg-robin_egg_blue-800 flex-col gap-4 items-center justify-center shadow-xl shadow-midnight_green-100`}
+    <Card
+      sx={{ maxWidth: 345 }}
+      className={cn("flex flex-col justify-between")}
     >
-      {/* Book Picture */}
-      <picture className="size-1/2">
-        <img className="size-full" src={bookImage} alt="" />
-      </picture>
-      {/* Book Title */}
-      <div>
-        <h1 className=" text-3xl font-bold text-center">{bookTitle}</h1>
-      </div>
-      {/* Book author */}
-      <div>
-        <span className="font-bold">{bookAuthor}</span>
-      </div>
-      {/* Book description */}
-      <div className="flex flex-col items-center gap-6">
-        <ul className="flex gap-2">
-          {bookGenres.map((genre, index) => (
-            <li key={index}>{genre}</li>
-          ))}
-        </ul>
-        {/* Book price */}
-        <StarRating rating={bookRating} />
-        {/* Preview Button */}
+      <CardMedia sx={{ height: 140 }} image={bookImage} title="green iguana" />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {bookTitle}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" overflow={"hidden"}>
+          {getFirstSentence(bookDescription)}
+        </Typography>
+      </CardContent>
+      <CardActions className={cn("self-end ")}>
         <PreviewButton book_id={bookId} />
-      </div>
-    </div>
+      </CardActions>
+    </Card>
   );
 };
 

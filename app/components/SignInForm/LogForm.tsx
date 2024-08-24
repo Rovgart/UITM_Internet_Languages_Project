@@ -1,3 +1,4 @@
+"use client";
 import { login } from "@/lib/lib";
 import { Button, TextField } from "@mui/material";
 import { Dancing_Script } from "next/font/google";

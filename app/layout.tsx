@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import CookiePopUp from "./components/Cookie/CookiePopUp";
 import Header from "./components/header";
-import Modal from "./components/Modal/Modal";
-import LogForm from "./components/SignInForm/LogForm";
 import "./globals.css";
+import { cn } from "./utils/cn";
 
 const lato = Lato({ subsets: ["latin"], weight: "400" });
 export const metadata: Metadata = {
@@ -19,8 +18,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg">
-        <Header children={undefined} auth={undefined} />
+      <body>
+        <Header />
         {children}
         <CookiePopUp></CookiePopUp>
       </body>

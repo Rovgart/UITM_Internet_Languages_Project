@@ -32,6 +32,7 @@ const config: Config = {
       },
       gridTemplateColumns: {
         bestseller_grid: "repeat(3, minmax(0, 1fr))",
+        bestseller_container: "minmax(0,14rem) minmax(0,1fr) minmax(0,14rem)",
         book_preview_grid: "minmax(0,300px), minmax(auto,1fr)",
         register_grid: "minmax(auto,600px) minmax(0,1fr)",
       },
