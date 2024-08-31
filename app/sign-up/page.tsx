@@ -25,7 +25,6 @@ const roboto = Roboto({
   weight: "400",
   variable: "--font-roboto",
 });
-
 const SignUp = () => {
   const router = useRouter();
   const { signUpSchema } = formSchemas();

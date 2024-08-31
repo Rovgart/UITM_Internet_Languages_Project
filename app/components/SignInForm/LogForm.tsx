@@ -12,8 +12,23 @@ import {
 import SubmitButton from "../buttons/SubmitButton";
 import { formSchemas } from "@/schemas/auth";
 import { signIn } from "@/actions/sign-in";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const LogForm = () => {
+  const router = useRouter();
+  const { mutate, isPending } = useMutation({
+    mutationFn: signIn, // The mutation function to be called
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success("Successfully Registered");
+      router.push("/home");
+    },
+    onError: (error) => {
+      toast.error("Invalid email or password");
+    },
+  });
   const { signInSchema } = formSchemas();
   return (
     <div>
@@ -24,8 +39,7 @@ const LogForm = () => {
         }}
         validationSchema={signInSchema} // Pass the Yup validation schema
         onSubmit={async (values) => {
-          await signIn(values);
-          console.log(values);
+          mutate(values);
         }}
       >
         {({ errors, touched }) => (

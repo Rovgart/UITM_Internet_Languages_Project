@@ -11,7 +11,7 @@ import bcrypt from "bcrypt";
 let client;
 let db: Db;
 let users: Collection;
-const SECRET_KEY = "secret";
+const SECRET_KEY = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(SECRET_KEY);
 export async function connect() {
   if (db) return;
@@ -44,8 +44,8 @@ export async function login(user: { email: string; password: string }) {
   const { email, password } = user;
   console.log(user);
   const userExist = await users.findOne({ email: user.email });
-
-  if (userExist && (await compare(password, userExist.password))) {
+  console.log(userExist);
+  if (userExist && (await compare(password, userExist?.hashedPassword))) {
     // Create session
     const expires = new Date(Date.now() + 10 * 1000);
     const session = await encrypt({ email, expires });
@@ -54,7 +54,11 @@ export async function login(user: { email: string; password: string }) {
       expires: expires,
       httpOnly: true,
     });
-    return { token: session, user: userExist };
+    const data = {
+      token: session,
+      user: userExist,
+    };
+    return data;
   }
 
   console.error("Invalid email or password");
@@ -73,8 +77,7 @@ export const getSession = async () => {
   if (!session) return null;
   return await decrypt(session);
 };
-
-export const updateSessions = async (request: NextRequest) => {
+export const updateSessions = async () => {
   // Checking if session exists
   const session = cookies().get("session")?.value;
   if (!session) return null;

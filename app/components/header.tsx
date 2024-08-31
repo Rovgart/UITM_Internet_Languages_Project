@@ -40,8 +40,6 @@ const Header = ({
           </span>
         </picture>
         <nav className={`md:flex gap-3 order-3 sm:order-2 hidden`}>
-          <Link href={routes.home}>Home</Link>
-          <Link href={routes.about}>About</Link>
           <Link href={routes.signIn}>Sign In</Link>
           <Link href={routes.signUp}>Sign Up</Link>
         </nav>
@@ -53,10 +51,7 @@ const Header = ({
           className={` ${
             searchState ? "hidden" : "block"
           } flex items-center order-2 sm:order-3`}
-        >
-          {/* Hamburger icon */}
-          {/* <Search searchStateProp={searchState} /> */}
-        </nav>
+        ></nav>
         <GiHamburgerMenu
           className="md:hidden text-3xl "
           onClick={() => setHeaderState({ hamburgerState: true })}

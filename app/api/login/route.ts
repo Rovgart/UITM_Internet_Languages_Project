@@ -8,12 +8,13 @@ export async function POST(req: NextRequest) {
       email: email,
       password: password,
     };
+    console.log(email, password);
     // Call the login function with email and password
     const data = await login(user);
     console.log(data);
 
     if (data) {
-      return NextResponse.json({ token: data.token }); // Return the data as a JSON response
+      return NextResponse.json({ token: data.token, user: data.user?._id }); // Return the data as a JSON response
     } else {
       return NextResponse.json(
         { message: "Invalid credentials" },
