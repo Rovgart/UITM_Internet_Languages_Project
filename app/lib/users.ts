@@ -1,5 +1,7 @@
-import { Collection, Db, ObjectId } from "mongodb";
+import { Collection, Db } from "mongodb";
 import clientPromise from "./mongodb";
+import { getSession } from "./lib";
+import { user } from "@nextui-org/react";
 
 let db: Db;
 let client;
@@ -18,11 +20,13 @@ async () => {
   await connect();
 };
 
-export const getUser = async (user_id: string) => {
+export const getUser = async () => {
   try {
     await connect();
-    const user = await users.findOne({ _id: new ObjectId(user_id) });
-    return user;
+    const userId = await getSession();
+    if (!userId) return null;
+    console.log(userId);
+    return userId;
   } catch (error: any) {
     console.error(error?.message);
   }

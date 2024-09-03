@@ -69,12 +69,13 @@ export const logout = async () => {
   // Destroy the session
   cookies().set("session", "", { expires: new Date(Date.now() + 15000) });
 };
-
 export const getSession = async () => {
   // get session from cookie
-  const session = cookies().get("session")?.value;
+  const session = cookies().get("access_token")?.value;
+  console.log(session);
   // If session not found, return null
   if (!session) return null;
+  console.log(await decrypt(session));
   return await decrypt(session);
 };
 export const updateSessions = async () => {

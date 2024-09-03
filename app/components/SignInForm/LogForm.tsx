@@ -15,18 +15,19 @@ import { signIn } from "@/actions/sign-in";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-
+import useAppStore from "@/store/ApplicationStore";
 const LogForm = () => {
+  const { loginUser, setAuthenticated } = useAppStore();
   const router = useRouter();
   const { mutate, isPending } = useMutation({
-    mutationFn: signIn, // The mutation function to be called
-    onSuccess: (data) => {
-      console.log(data);
+    mutationFn: loginUser, // The mutation function to be called
+    onSuccess: () => {
+      setAuthenticated();
       toast.success("Successfully Registered");
       router.push("/home");
     },
     onError: (error) => {
-      toast.error("Invalid email or password");
+      toast.error(error?.message);
     },
   });
   const { signInSchema } = formSchemas();

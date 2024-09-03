@@ -24,3 +24,8 @@ export type RegisterResponse = {
   email: string;
   password: string;
 };
+
+export type Token = {
+  access_token: string;
+  refresh_token: string;
+};

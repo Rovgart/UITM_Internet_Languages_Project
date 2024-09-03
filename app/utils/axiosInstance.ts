@@ -1,4 +1,4 @@
-import { logout } from "@/lib/lib";
+"use server";
 import { BASE_URL } from "@/lib/urls";
 import axios, { AxiosRequestConfig, RawAxiosRequestConfig } from "axios";
 import { cookies } from "next/headers";
