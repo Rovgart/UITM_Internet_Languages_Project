@@ -7,7 +7,6 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import Search from "./search/search";
 import { routes } from "constants/routes";
 import { Avatar } from "@mui/material";
-import useAppStore from "@/store/ApplicationStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUser } from "@/actions/getCurrentUser";
 type Props = {};
@@ -29,7 +28,7 @@ const Header = ({
     searchState: false,
   });
   const { hamburgerState, searchState } = headerState;
-  const { isAuthenticated } = useAppStore();
+  // const { isAuthenticated } = useAppStore();
   const { data, isPending, isError } = useQuery({
     queryKey: ["user"],
     queryFn: getUser,
@@ -51,17 +50,12 @@ const Header = ({
             Bookjourney
           </span>
         </picture>
-        {isAuthenticated ? (
-          <>
-            <Avatar alt={data} src={data} className="order-3" />
-            <p>{data}</p>
-          </>
-        ) : (
-          <nav className={`md:flex gap-3 order-3 sm:order-2 hidden`}>
-            <Link href={routes.signIn}>Sign In</Link>
-            <Link href={routes.signUp}>Sign Up</Link>
-          </nav>
-        )}
+        <Avatar alt={data} src={data} className="order-3" />
+        <p>{data}</p>
+        <nav className={`md:flex gap-3 order-3 sm:order-2 hidden`}>
+          <Link href={routes.signIn}>Sign In</Link>
+          <Link href={routes.signUp}>Sign Up</Link>
+        </nav>
 
         <Hamburger
           hamburgerState={hamburgerState}

@@ -10,8 +10,8 @@ async function middleware(req: NextRequest) {
   const protectedRoutes = ["/l", "/r"];
   const publicRoutes = ["/sign-in", "/sign-up"];
   const session = req.cookies.get("access_token")?.value;
-  if (session && req.nextUrl.pathname === "/") {
-    url.pathname = "/home";
+  if (session && req.nextUrl.pathname === "/home") {
+    url.pathname = "/";
     return NextResponse.redirect(url);
   }
   if (protectedRoutes.includes(url.pathname) && !session) {
