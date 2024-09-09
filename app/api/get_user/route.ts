@@ -1,10 +1,11 @@
+import { getSession } from "@/lib/lib";
 import { getUser } from "@/lib/users";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function GET() {
   try {
-    const { user_id } = await req.json();
-    const user = await getUser(user_id);
+    const user = await getUser();
+    console.log(user);
     if (user) {
       return NextResponse.json(user);
     } else {

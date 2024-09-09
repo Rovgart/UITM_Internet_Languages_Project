@@ -91,14 +91,21 @@ export const getBook = async (book_id: string) => {
     throw new Error("Failed to fetch book");
   }
 };
-export const getBookByName = async (book_name: string) => {
+export const getBookByName = async (q: string) => {
   try {
     await connect();
-    const result = await books
-      .find({ title: { $regex: book_name, $options: "i" } })
+    const results = await books
+      .find({ title: { $regex: q, $options: "i" } })
+      .limit(10)
       .toArray();
-    return result;
+    console.log(results);
+   for (const book of results) {
+      
+   }
+    console.log(finalResults);
+    return finalResults;
   } catch (error: any) {
+    console.error("Error fetching book:", error.message);
     throw new Error("Failed to fetch book");
   }
 };

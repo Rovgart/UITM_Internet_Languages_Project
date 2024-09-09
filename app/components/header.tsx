@@ -1,13 +1,14 @@
 "use client";
-import { Dancing_Script, Lato, Roboto_Mono } from "next/font/google";
+import { Dancing_Script, Lato } from "next/font/google";
 import Link from "next/link";
-import React, { ReactNode, useState } from "react";
-import { CiShoppingCart } from "react-icons/ci";
+import React, { ReactNode, useEffect, useState } from "react";
 import Hamburger from "./hamburger/Hamburger";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { CiSearch } from "react-icons/ci";
-import { TextField } from "@mui/material";
 import Search from "./search/search";
+import { routes } from "constants/routes";
+import { Avatar } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getUser } from "@/actions/getCurrentUser";
 type Props = {};
 const lato = Lato({ subsets: ["latin"], weight: "400" });
 const roboto = Dancing_Script({
@@ -19,17 +20,25 @@ const Header = ({
   children,
   auth,
 }: {
-  children: ReactNode;
-  auth: ReactNode;
+  children?: ReactNode;
+  auth?: ReactNode;
 }) => {
   const [headerState, setHeaderState] = useState({
     hamburgerState: false,
     searchState: false,
   });
   const { hamburgerState, searchState } = headerState;
+  // const { isAuthenticated } = useAppStore();
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["user"],
+    queryFn: getUser,
+  });
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   return (
     <div className={lato.className}>
-      <header className="bg-midnight_green px-5 text-midnight_green-900 min-h-[12vh] flex justify-around items-center fixed top-0 w-full">
+      <header className="bg-midnight_green p-5 text-midnight_green-900 flex justify-around items-center  w-full">
         <picture
           className={`${
             searchState ? "hidden" : "block"
@@ -41,12 +50,13 @@ const Header = ({
             Bookjourney
           </span>
         </picture>
+        <Avatar alt={data} src={data} className="order-3" />
+        <p>{data}</p>
         <nav className={`md:flex gap-3 order-3 sm:order-2 hidden`}>
-          <Link href={"/"}>Home</Link>
-          <Link href={"/About"}>About</Link>
-          <Link href={"/login"}>SignIn</Link>
-          <Link href={"/signup"}>SignUp</Link>
+          <Link href={routes.signIn}>Sign In</Link>
+          <Link href={routes.signUp}>Sign Up</Link>
         </nav>
+
         <Hamburger
           hamburgerState={hamburgerState}
           closeHandler={() => setHeaderState({ hamburgerState: false })}
@@ -55,10 +65,7 @@ const Header = ({
           className={` ${
             searchState ? "hidden" : "block"
           } flex items-center order-2 sm:order-3`}
-        >
-          {/* Hamburger icon */}
-          <Search searchStateProp={searchState} />
-        </nav>
+        ></nav>
         <GiHamburgerMenu
           className="md:hidden text-3xl "
           onClick={() => setHeaderState({ hamburgerState: true })}
