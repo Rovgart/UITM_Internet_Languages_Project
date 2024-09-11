@@ -12,7 +12,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-function Layout() {
+import { ReactNode } from "@tanstack/react-router";
+function Layout({ children }: { children: ReactNode }) {
   const [openMenu, setOpenMenu] = useState(false);
   const handleOpenClose = () => {
     setOpenMenu((prev) => !prev);
@@ -31,10 +32,11 @@ function Layout() {
         <Avatar></Avatar>
         <ButtonGroup>
           <IconButton className="bg-blue-300" variant="contained" size="large">
-            <NotificationsNoneIcon color="action" variant />
+            <NotificationsNoneIcon color="action" />
           </IconButton>
         </ButtonGroup>
       </div>
+      <section>{children}</section>
       {openMenu || matches ? <DashboardMenu /> : ""}
     </main>
   );
