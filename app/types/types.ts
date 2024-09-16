@@ -3,7 +3,7 @@ export type Book = {
   author: string;
   bookformat: string;
   desc: string;
-  genre: string[];
+  genre: string;
   img: string;
   link: string;
   pages: number;
@@ -23,4 +23,13 @@ export type BestsellersResponse = {
 export type RegisterResponse = {
   email: string;
   password: string;
+};
+
+export type Token = {
+  access_token: string;
+  refresh_token: string;
+};
+export type TrendingAuthorsT = {
+  totalReviews: number;
+  authorName: string;
 };

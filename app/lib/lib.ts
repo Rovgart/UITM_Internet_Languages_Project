@@ -11,7 +11,7 @@ import bcrypt from "bcrypt";
 let client;
 let db: Db;
 let users: Collection;
-const SECRET_KEY = "secret";
+const SECRET_KEY = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(SECRET_KEY);
 export async function connect() {
   if (db) return;
@@ -39,38 +39,46 @@ export const decrypt = async (input: string): Promise<any> => {
   return payload;
 };
 
-export async function login(user: { username: string; password: string }) {
+export async function login(user: { email: string; password: string }) {
   await connect();
   const { email, password } = user;
-
-  const userExist = await users.findOne({ email: email });
-
-  if (userExist && (await compare(password, user.password))) {
+  console.log(user);
+  const userExist = await users.findOne({ email: user.email });
+  console.log(userExist);
+  if (userExist && (await compare(password, userExist?.hashedPassword))) {
     // Create session
     const expires = new Date(Date.now() + 10 * 1000);
     const session = await encrypt({ email, expires });
     // Save the session in the cookie
-    cookies().set("session", session, { expires: new Date(0), httpOnly: true });
-    return { token: session, user: user };
+    cookies().set("session", session, {
+      expires: expires,
+      httpOnly: true,
+    });
+    const data = {
+      token: session,
+      user: userExist,
+    };
+    return data;
   }
 
   console.error("Invalid email or password");
+  return null;
 }
 
 export const logout = async () => {
   // Destroy the session
   cookies().set("session", "", { expires: new Date(Date.now() + 15000) });
 };
-
 export const getSession = async () => {
   // get session from cookie
-  const session = cookies().get("session")?.value;
+  const session = cookies().get("access_token")?.value;
+  console.log(session);
   // If session not found, return null
   if (!session) return null;
+  console.log(await decrypt(session));
   return await decrypt(session);
 };
-
-export const updateSessions = async (request: NextRequest) => {
+export const updateSessions = async () => {
   // Checking if session exists
   const session = cookies().get("session")?.value;
   if (!session) return null;
@@ -109,8 +117,6 @@ export const register = async (formData: FormData) => {
       password: hashedPassword,
       createdAt: new Date(Date.now()),
     };
-    const insertData = await users.insertOne(createdUser);
-    const LoginValid = await login(formData);
 
     console.log("Successfully registered");
   } catch (error: any) {
