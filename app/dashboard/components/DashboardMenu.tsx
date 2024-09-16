@@ -1,22 +1,16 @@
 import React from "react";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import HouseIcon from "@mui/icons-material/House";
 import ExploreIcon from "@mui/icons-material/Explore";
-import SettingsIcon from "@mui/icons-material/Settings";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import HelpIcon from "@mui/icons-material/Help";
-import MenuIcon from "@mui/icons-material/Menu";
 import DashboardSearch from "../components/DashboardSearch";
 
 function DashboardMenu() {
   return (
-    <main>
-      <List
-        className=" sm:flex sm:flex-col"
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "white" }}
-      >
+    <main className="col-[1/2] sm:block hidden border  ">
+      <List className=" sm:flex sm:flex-col" sx={{ bgcolor: "white" }}>
         <DashboardSearch />
 
         <ListItemButton>

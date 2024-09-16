@@ -1,10 +1,13 @@
 import { getBook } from "@/lib/books";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { slug: string } }
+) {
   try {
-    const { book_id } = await req.json(); // Ensure you are destructuring the book_id from the JSON body
-    const data = await getBook(book_id);
+    const slug = params.slug;
+    const data = await getBook(slug);
     if (data) {
       console.log(data);
       return NextResponse.json(data); // Return the data as a JSON response

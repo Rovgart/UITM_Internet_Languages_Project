@@ -10,7 +10,7 @@ export type Book = {
   rating: number;
   reviews: number;
   title: string;
-  totalratings: number
+  totalratings: number;
 };
 export type BestsellersResponse = {
   id: number;
@@ -28,4 +28,8 @@ export type RegisterResponse = {
 export type Token = {
   access_token: string;
   refresh_token: string;
+};
+export type TrendingAuthorsT = {
+  totalReviews: number;
+  authorName: string;
 };
