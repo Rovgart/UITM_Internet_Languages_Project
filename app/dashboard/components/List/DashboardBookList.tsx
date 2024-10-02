@@ -1,18 +1,19 @@
 "use client";
 import { getBooks } from "@/lib/books";
 import { Box } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React from "react";
 import DashboardBookItem from "./DashboardBookItem";
 import { fetchBestsellers } from "@/actions/fetch-bestsellers";
+import { useRouter } from "next/navigation";
+import { fetchBook } from "@/api/actions";
 
 function DashboardBookList() {
   const { data: Books } = useQuery({
     queryKey: ["popular"],
     queryFn: () => fetchBestsellers(),
   });
-<<<<<<< Updated upstream
-=======
+
   const { data, mutate } = useMutation({ mutationFn: fetchBook });
   const router = useRouter();
   const previewBookHandler = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -23,12 +24,17 @@ function DashboardBookList() {
       router.push(`/dashboard/book/${bookId}`);
     }
   };
->>>>>>> Stashed changes
   return (
     <Box>
       {Books &&
         Books.map((book, index) => (
-          <DashboardBookItem key={index} image={book.img} />
+          <DashboardBookItem
+            key={index}
+            image={book.img}
+            id={0}
+            author={book.author}
+            title={book.title}
+          />
         ))}
     </Box>
   );
