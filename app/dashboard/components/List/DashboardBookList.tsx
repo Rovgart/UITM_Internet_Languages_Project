@@ -11,6 +11,19 @@ function DashboardBookList() {
     queryKey: ["popular"],
     queryFn: () => fetchBestsellers(),
   });
+<<<<<<< Updated upstream
+=======
+  const { data, mutate } = useMutation({ mutationFn: fetchBook });
+  const router = useRouter();
+  const previewBookHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const bookId = target.dataset.bookId;
+    if (bookId) {
+      console.log("Selected book", bookId);
+      router.push(`/dashboard/book/${bookId}`);
+    }
+  };
+>>>>>>> Stashed changes
   return (
     <Box>
       {Books &&

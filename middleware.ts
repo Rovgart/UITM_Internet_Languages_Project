@@ -19,7 +19,7 @@ async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
   if (publicRoutes.includes(url.pathname) && session) {
-    url.pathname = "/home";
+    url.pathname = "/";
     return NextResponse.redirect(url);
   }
 }

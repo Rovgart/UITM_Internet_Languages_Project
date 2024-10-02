@@ -85,6 +85,7 @@ export const getBook = async (book_id: string) => {
   try {
     await connect();
     const book = await books.findOne({ _id: new ObjectId(book_id) });
+    console.log(book);
     return book;
   } catch (error: any) {
     console.error("Error fetching book", error);

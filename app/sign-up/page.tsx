@@ -8,8 +8,6 @@ import Image from "next/image";
 import { login, register } from "@/lib/lib";
 import { redirect, useRouter } from "next/navigation";
 import SubmitButton from "@/components/buttons/SubmitButton";
-
-import { getUser } from "@/lib/users";
 import { Formik, Form, Field } from "formik";
 import { formSchemas } from "@/schemas/auth";
 import { signUp } from "@/actions/sign-up";
@@ -53,14 +51,13 @@ const SignUp = () => {
             Create an account
           </h1>
         </div>
-        {/* Sign Up Form */}
         <Formik
           onSubmit={async (values) => {
             console.log(values);
             const validSignUp = await signUp(values);
             if (validSignUp) {
               toast.success("Your account has been successfully created ");
-              router.push(routes.home);
+              router.push(routes.signIn);
             }
           }}
           validationSchema={signUpSchema}
