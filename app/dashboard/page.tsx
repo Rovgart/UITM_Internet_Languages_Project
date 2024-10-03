@@ -13,9 +13,9 @@ function Dashboard() {
     queryKey: ["trendingAuthors"],
     queryFn: () => fetchTrendingAuthors(),
   });
-  useEffect(() => {
-    console.log(TrendingAuthors);
-  }, [TrendingAuthors]);
+  if (!TrendingAuthors) {
+    return;
+  }
   return (
     <Container className="border flex md:flex-row flex-col   p-4 bg-gray-50 ">
       <DashboardNavbar />

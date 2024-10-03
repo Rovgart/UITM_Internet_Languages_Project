@@ -5,7 +5,6 @@ import { CiSearch } from "react-icons/ci";
 import SearchResult from "./searchResult";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { fetchBook } from "@/api/actions";
-
 const SearchForm = () => {
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -47,28 +46,28 @@ const SearchForm = () => {
     }
   };
 
-  useEffect(() => {
-    const init = setTimeout(async () => {
-      const formValidatorResult = formValidator();
-      if (formValidatorResult) {
-        const encodedQuery = encodeURI(searchQuery as string);
-        // Fetch data in the client component and update state
-        const res = await fetch(`/api/search?q=${encodedQuery}`, {
-          headers: { "Content-Type": "application/json" },
-          method: "GET",
-          body: JSON.stringify({
-            query: query,
-          }),
-        });
-        const data = await res.json();
-        console.log(data);
-      }
-      console.log(searchParams);
-    }, 500);
-    return () => {
-      clearTimeout(init);
-    };
-  }, [query]);
+  // useEffect(() => {
+  //   const init = setTimeout(async () => {
+  //     const formValidatorResult = formValidator();
+  //     if (formValidatorResult) {
+  //       const encodedQuery = encodeURI(searchQuery as string);
+  //       // Fetch data in the client component and update state
+  //       const res = await fetch(`/api/search?q=${encodedQuery}`, {
+  //         headers: { "Content-Type": "application/json" },
+  //         method: "GET",
+  //         body: JSON.stringify({
+  //           query: query,
+  //         }),
+  //       });
+  //       const data = await res.json();
+  //       console.log(data);
+  //     }
+  //     console.log(searchParams);
+  //   }, 500);
+  //   return () => {
+  //     clearTimeout(init);
+  //   };
+  // }, [query]);
 
   return (
     <form className="flex gap-4" action="">
@@ -88,7 +87,6 @@ const SearchForm = () => {
         type="text"
         name="search"
         value={query}
-        onChange={(e) => onChangeSearch(e)}
       />
     </form>
   );

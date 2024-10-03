@@ -5,26 +5,26 @@ import * as Yup from "yup"; // Import Yup for validation
 import { cn } from "@/utils/cn";
 import {
   Checkbox,
+  Divider,
   FormControlLabel,
   FormGroup,
   TextField,
 } from "@mui/material";
 import SubmitButton from "../buttons/SubmitButton";
 import { formSchemas } from "@/schemas/auth";
-import { signIn } from "@/actions/sign-in";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import useAppStore from "@/store/ApplicationStore";
+import { signIn } from "@/actions/sign-in";
+import { routes } from "constants/routes";
+import { MdRememberMe } from "react-icons/md";
 const LogForm = () => {
-  const { loginUser, setAuthenticated } = useAppStore();
   const router = useRouter();
   const { mutate, isPending } = useMutation({
-    mutationFn: loginUser, // The mutation function to be called
+    mutationFn: signIn,
     onSuccess: () => {
-      setAuthenticated();
       toast.success("Successfully Registered");
-      router.push("/home");
+      router.push(routes.dashboard);
     },
     onError: (error) => {
       toast.error(error?.message);
@@ -32,14 +32,17 @@ const LogForm = () => {
   });
   const { signInSchema } = formSchemas();
   return (
-    <div>
+    <div className="flex items-center border h-full flex-col justify-center w-full">
+      <h1 className="text-4xl font-bold text-midnight_green-700">Sign In</h1>
       <Formik
         initialValues={{
           email: "",
           password: "",
+          rememberMe: false,
         }}
-        validationSchema={signInSchema} // Pass the Yup validation schema
+        validationSchema={signInSchema}
         onSubmit={async (values) => {
+          console.log(values);
           mutate(values);
         }}
       >
@@ -74,7 +77,10 @@ const LogForm = () => {
                 />
               </FormGroup>
             </div>
-
+            <Divider />
+            <div>
+              <div className="g-signin2" data-onsuccess="onSignIn"></div>
+            </div>
             <SubmitButton />
           </Form>
         )}

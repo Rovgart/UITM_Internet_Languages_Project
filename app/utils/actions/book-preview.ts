@@ -1,6 +1,6 @@
 import { getBookUrl } from "@/lib/urls";
 import axios, { AxiosError } from "axios";
-export const fetchBookPreview = async (id: number) => {
+export const fetchBookPreview = async (id: string) => {
   try {
     const response = await axios.get(getBookUrl, {
       params: id,

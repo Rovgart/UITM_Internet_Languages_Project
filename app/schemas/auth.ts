@@ -6,14 +6,16 @@ export const formSchemas = () => {
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
       .required("Password is required"),
-    rememberMe: Yup.boolean(),
+    rememberMe: Yup.bool(),
   });
 
   const signUpSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().min(8, "Password must be at least 8 characters"),
+    password: Yup.string()
+      .min(8, "Password must be at least 8 characters")
+      .required("Password is required"),
     repeatPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Password must match")
+      .oneOf([Yup.ref("password")], "Passwords must match")
       .required("Please confirm your password"),
   });
   return { signInSchema, signUpSchema };

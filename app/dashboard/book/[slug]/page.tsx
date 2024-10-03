@@ -1,4 +1,5 @@
 "use client";
+import BookItem from "@/components/books/bookItem";
 import { fetchBookPreview } from "@/utils/actions/book-preview";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";

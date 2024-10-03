@@ -35,9 +35,10 @@ const BookItem = ({
 }: BookItemProps) => {
   // const price = `${bookPrice.toFixed(2)} zl`;
   const getFirstSentence = (bookDesc: string) => {
-    const firstSentenceEnd = bookDesc.indexOf(".") + 1;
+    const firstSentenceEnd = bookDesc?.indexOf(".") + 1;
     if (firstSentenceEnd === 0) return bookDesc;
-    return bookDesc.substring(0, firstSentenceEnd);
+    const book = bookDesc?.substring(0, firstSentenceEnd);
+    return book;
   };
   return (
     <Card
