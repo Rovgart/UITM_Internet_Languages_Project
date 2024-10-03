@@ -13,9 +13,6 @@ function Dashboard() {
     queryKey: ["trendingAuthors"],
     queryFn: () => fetchTrendingAuthors(),
   });
-  useEffect(() => {
-    console.log(TrendingAuthors);
-  }, [TrendingAuthors]);
   if (!TrendingAuthors) {
     return;
   }

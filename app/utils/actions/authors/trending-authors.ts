@@ -5,5 +5,5 @@ import axios from "axios";
 
 export const fetchTrendingAuthors = async (): Promise<TrendingAuthorsT[]> => {
   const res = await axios.get(trendingAuthorsUrl);
-  return res.data.authors;
+  return res.data?.authors;
 };
