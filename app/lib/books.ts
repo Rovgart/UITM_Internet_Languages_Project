@@ -1,6 +1,7 @@
 import { Collection, Db, ObjectId } from "mongodb";
 import clientPromise from "./mongodb";
 import { getCollection } from "./connect";
+import { followingAuthorsT } from "@/types/types";
 
 export async function getBooks() {
   try {
@@ -42,7 +43,7 @@ export const getCategory = async (category: string) => {
   }
 };
 
-export const getMostPopularBooks = async () => {
+export const getTopSellingBooks = async () => {
   try {
     // Connect to the database
     const books = await getCollection("books");
@@ -71,5 +72,41 @@ export const getBook = async (book_id: string) => {
   } catch (error: any) {
     console.error("Error fetching book", error);
     throw new Error("Failed to fetch book");
+  }
+};
+export const getTopRated = async () => {
+  try {
+    const books = await getCollection("books");
+    const newReleases = await books
+      .find({})
+      .sort({ rating: -1 })
+      .limit(10)
+      .toArray();
+    console.log("Top rated books:", newReleases);
+    return newReleases;
+  } catch (error) {
+    console.error("Error fetching top rated books", error);
+  }
+};
+export const getBooksByFollowedAuthors = async (
+  followedAuthors: followingAuthorsT[]
+) => {
+  try {
+    const books = await getCollection("books");
+    const followedBooks = await Promise.all(
+      followedAuthors.map(async (author) => {
+        const authorBooks = await books
+          .find({ author: author.authorId })
+          .toArray();
+        return {
+          author: author.authorName,
+          books: authorBooks,
+        };
+      })
+    );
+    return followedBooks;
+  } catch (error) {
+    console.error("Error fetching books for followed authors", error);
+    throw new Error("Failed to get books by followed authors");
   }
 };

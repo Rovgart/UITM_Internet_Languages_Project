@@ -1,4 +1,4 @@
-import { getTopSellingBooks } from "@/lib/books";
+import { getBooksByFollowedAuthors } from "@/lib/books";
 import { NextRequest, NextResponse } from "next/server";
 /**
  * @swagger
@@ -6,12 +6,30 @@ import { NextRequest, NextResponse } from "next/server";
  *   - name: Books
  *     description: Endpoints related to retrieving book collections
  *
- * /api/books/top_selling:
- *   get:
+ * /api/books/{followedAuthors}:
+ *   post:
  *     tags:
  *       - Books
- *     summary: Retrieve top selling books
- *     description: Returns a collection of most sold books.
+ *     summary: Retrieve books by followed authors
+ *     description: Returns a collection of books based on an array of followed authors.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               followedAuthors:
+ *                 type: array
+ *                 description: An array of followed authors' information.
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: The author's unique identifier.
+ *             required:
+ *               - followedAuthors
  *     responses:
  *       200:
  *         description: Successfully returned a collection of books.
@@ -35,10 +53,6 @@ import { NextRequest, NextResponse } from "next/server";
  *                       author:
  *                         type: string
  *                         description: The name of the author.
- *                       img:
- *                         type: string
- *                         description: URL of the book's image.
- *                         format: uri
  *       400:
  *         description: Bad Request. Invalid input or missing required fields.
  *       401:
@@ -46,23 +60,25 @@ import { NextRequest, NextResponse } from "next/server";
  *       500:
  *         description: Internal server error.
  */
-export async function GET(req: NextRequest) {
+
+export async function POST(req: NextRequest) {
   try {
-    if (!req.headers.has("Authorization")) {
-      return NextResponse.json(
-        { message: "Missing authorization token" },
-        { status: 401 }
-      );
-    }
-    if (req.method !== "GET")
+    if (req.method !== "POST") {
       return NextResponse.json(
         { message: "Method not allowed" },
         { status: 405 }
       );
-
-    const data = await getTopSellingBooks();
+    }
+    if (!req.headers.has("Authorization")) {
+      return NextResponse.json(
+        { message: "Authorization failed" },
+        { status: 401 }
+      );
+    }
+    const { followedAuthors } = await req.json();
+    const data = await getBooksByFollowedAuthors(followedAuthors);
     return data;
   } catch (error) {
-    throw error;
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

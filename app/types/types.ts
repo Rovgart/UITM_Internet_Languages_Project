@@ -33,3 +33,8 @@ export type TrendingAuthorsT = {
   totalReviews: number;
   authorName: string;
 };
+export type followingAuthorsT = {
+  authorId: number;
+  authorName: string;
+  authorImage: string;
+};

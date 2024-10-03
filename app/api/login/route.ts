@@ -1,5 +1,52 @@
 import { login } from "@/lib/lib";
 import { NextRequest, NextResponse } from "next/server";
+/**
+ * @swagger
+ * tags:
+ *   - name: Auth
+ *     description: Authentication related endpoints
+ *
+ * /api/login:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Login a user
+ *     description: Returns access token and refresh token for authorized user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email.
+ *               password:
+ *                 type: string
+ *                 description: The user's password.
+ *             required:
+ *               - email
+ *               - password
+ *     responses:
+ *       200:
+ *         description: Success, returns access token and refresh token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ *       400:
+ *         description: Bad Request, missing email or password.
+ *       401:
+ *         description: Unauthorized, invalid email or password.
+ *       500:
+ *         description: Internal server error.
+ */
 
 export async function POST(req: NextRequest) {
   try {
