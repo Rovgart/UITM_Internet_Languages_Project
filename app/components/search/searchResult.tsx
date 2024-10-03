@@ -12,14 +12,14 @@ const SearchResult = async ({ query }: { query: string }) => {
     <ul>
       {/* render search results */}
       {books.map((book) => (
-        <li className="flex items-center">
+        <li key={book._id} className="flex items-center">
           <div className="flex flex-col">
             <h2>{book.title}</h2>
             <span>{book.author}</span>
             <StarRating rating={book.rating} />
           </div>
           {/* Preview Button */}
-          <PreviewButton book_id={book._id} />
+          <PreviewButton book_id={book._id.toString()} />
         </li>
       ))}
     </ul>

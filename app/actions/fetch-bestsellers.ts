@@ -26,7 +26,7 @@ export const fetchBestsellers = async (): Promise<
     }
   } catch (error) {
     if (error instanceof AxiosError) {
-      throw error;
+      throw new Error(error?.response?.data);
     } else {
       throw new Error("Unexpected error occurred");
     }

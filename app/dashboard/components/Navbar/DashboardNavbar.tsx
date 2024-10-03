@@ -1,6 +1,7 @@
 "use client";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Container, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
+import DashboardBookList from "../List/DashboardBookList";
 function DashboardNavbar() {
   const [value, setValue] = useState(1);
 
@@ -8,7 +9,7 @@ function DashboardNavbar() {
     setValue(newValue);
   };
   return (
-    <Box>
+    <Container className="col-[2/3] row-[1/-1] border bg-white rounded-lg">
       <Tabs
         value={value}
         onChange={handleTabChange}
@@ -20,7 +21,8 @@ function DashboardNavbar() {
         <Tab value={"following"} label="Following" />
         <Tab value={"new_releases"} label="New releases" />
       </Tabs>
-    </Box>
+      <DashboardBookList />
+    </Container>
   );
 }
 

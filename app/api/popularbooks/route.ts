@@ -13,5 +13,6 @@ export const GET = async () => {
     return NextResponse.json(MostPopularBooks, { status: 500 });
   } catch (error: any) {
     console.error(error?.message);
+    return NextResponse.json({});
   }
 };

@@ -1,26 +1,10 @@
 import { Collection, Db, ObjectId } from "mongodb";
 import clientPromise from "./mongodb";
-let client;
-let db: Db;
-let books: Collection;
-
-export async function connect() {
-  if (db) return;
-  try {
-    client = await clientPromise;
-    db = client.db("BookStore");
-    books = db.collection("books");
-  } catch (err: any) {
-    console.error(err.message);
-  }
-}
-(async () => {
-  await connect();
-})();
+import { getCollection } from "./connect";
 
 export async function getBooks() {
   try {
-    await connect();
+    const books = await getCollection("books");
     const result = await books.find().limit(20).toArray();
     return { movies: result };
   } catch (err: any) {
@@ -30,11 +14,8 @@ export async function getBooks() {
 
 export const getBooksCategories = async () => {
   try {
-    await connect();
-    const genresCursor = await books.find(
-      {},
-      { projection: { genre: 1, _id: 0 } }
-    );
+    const books = await getCollection("books");
+    const genresCursor = books.find({}, { projection: { genre: 1, _id: 0 } });
     const genres = new Set();
     await genresCursor.forEach((doc) => {
       if (Array.isArray(doc.genre)) {
@@ -53,7 +34,7 @@ export const getBooksCategories = async () => {
 };
 export const getCategory = async (category: string) => {
   try {
-    await connect();
+    const books = await getCollection("books");
     const result = await books.find({ genre: category }).limit(20).toArray();
     return { movies: result };
   } catch (error) {
@@ -64,7 +45,7 @@ export const getCategory = async (category: string) => {
 export const getMostPopularBooks = async () => {
   try {
     // Connect to the database
-    await connect();
+    const books = await getCollection("books");
 
     // Query the books collection to find all books,
     // sort them by the number of reviews in descending order,
@@ -72,41 +53,23 @@ export const getMostPopularBooks = async () => {
     const result = await books
       .find({})
       .sort({ reviews: -1 })
-      .limit(3)
+      .limit(10)
       .toArray();
 
     return result; // Return the array of popular books
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching popular books", error);
-    throw new Error("Failed to fetch popular books");
+    throw new Error("Failed to fetch popular books", error);
   }
 };
 export const getBook = async (book_id: string) => {
   try {
-    await connect();
+    const books = await getCollection("books");
     const book = await books.findOne({ _id: new ObjectId(book_id) });
     console.log(book);
     return book;
   } catch (error: any) {
     console.error("Error fetching book", error);
-    throw new Error("Failed to fetch book");
-  }
-};
-export const getBookByName = async (q: string) => {
-  try {
-    await connect();
-    const results = await books
-      .find({ title: { $regex: q, $options: "i" } })
-      .limit(10)
-      .toArray();
-    console.log(results);
-   for (const book of results) {
-      
-   }
-    console.log(finalResults);
-    return finalResults;
-  } catch (error: any) {
-    console.error("Error fetching book:", error.message);
     throw new Error("Failed to fetch book");
   }
 };
