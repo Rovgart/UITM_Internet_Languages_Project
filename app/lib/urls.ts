@@ -9,3 +9,4 @@ export const logoutUrl = `${BASE_URL}/api/logout`;
 export const trendingAuthorsUrl = `${BASE_URL}/api/trending_authors`;
 export const booksOfFollowingAuthors = `${BASE_URL}/api/books/`;
 export const getUserUrl = `${BASE_URL}/api/user`;
+export const refreshTokenUrl = `${BASE_URL}/api/refresh_token`;
