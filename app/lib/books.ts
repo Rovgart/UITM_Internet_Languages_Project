@@ -54,7 +54,7 @@ export const getTopSellingBooks = async () => {
     const result = await books
       .find({})
       .sort({ reviews: -1 })
-      .limit(10)
+      .limit(50)
       .toArray();
 
     return result; // Return the array of popular books
@@ -80,7 +80,7 @@ export const getTopRated = async () => {
     const newReleases = await books
       .find({})
       .sort({ rating: -1 })
-      .limit(10)
+      .limit(50)
       .toArray();
     console.log("Top rated books:", newReleases);
     return newReleases;
@@ -108,5 +108,18 @@ export const getBooksByFollowedAuthors = async (
   } catch (error) {
     console.error("Error fetching books for followed authors", error);
     throw new Error("Failed to get books by followed authors");
+  }
+};
+export const getMostPopularBooks = async () => {
+  try {
+    const books = await getCollection("books");
+    const result = await books
+      .find({})
+      .sort({ totalratings: -1 })
+      .limit(50)
+      .toArray();
+    return result;
+  } catch (error) {
+    console.error("Error fetching most popular books", error);
   }
 };

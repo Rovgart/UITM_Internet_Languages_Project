@@ -5,7 +5,7 @@ import { followingAuthorsT } from "@/types/types";
 import axios, { AxiosError } from "axios";
 import { cookies, headers } from "next/headers";
 
-export const following = async (followingAuthors: followingAuthorsT[]) => {
+export const fetchFollowing = async (followingAuthors: followingAuthorsT[]) => {
   try {
     const token = cookies().get("AccessToken")?.value;
     const response = await axios.post(

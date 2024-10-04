@@ -1,18 +1,27 @@
 import { getMostPopularBooks } from "@/lib/books";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
   try {
-    const MostPopularBooks = await getMostPopularBooks();
-    if (MostPopularBooks) {
-      return NextResponse.json(MostPopularBooks, {
-        status: 200,
-        statusText: "The list of most popular books",
-      });
+    if (req.method !== "GET") {
+      return NextResponse.json(
+        { message: "Method not allowed" },
+        { status: 405 }
+      );
     }
-    return NextResponse.json(MostPopularBooks, { status: 500 });
+    if (!req.headers.has("Authorization")) {
+      return NextResponse.json(
+        { message: "Authorization failed" },
+        { status: 401 }
+      );
+    }
+    const MostPopularBooks = await getMostPopularBooks();
+    return NextResponse.json(MostPopularBooks, { status: 200 });
   } catch (error: any) {
-    console.error(error?.message);
-    return NextResponse.json({});
+    console.error(error);
+    return NextResponse.json(
+      { message: "Server error", error },
+      { status: 500 }
+    );
   }
 };

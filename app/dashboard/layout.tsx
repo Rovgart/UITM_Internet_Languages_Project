@@ -28,7 +28,9 @@ function Layout({ children }: { children: ReactNode }) {
     >
       <Header />
       <DashboardMenu />
-      <article className="md:col-[2/-1] col-[1/-1]">{children}</article>
+      <article className="md:col-[2/-1] col-[1/-1] border-red-500">
+        {children}
+      </article>
     </main>
   );
 }

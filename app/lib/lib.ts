@@ -89,10 +89,9 @@ export const logout = async (access_token: string) => {
   }
 };
 export const getSession = async () => {
-  const session = cookies().get("access_token")?.value;
-  console.log(session);
+  const session = cookies().get("AccessToken")?.value;
+  console.log("Session", session);
   if (!session) return null;
-  console.log(await decrypt(session));
   return await decrypt(session);
 };
 export const updateSessions = async () => {
@@ -143,6 +142,16 @@ export const register = async (formData: FormData) => {
     } else {
       console.error("An unknown error occurred");
     }
+    throw error;
+  }
+};
+export const getUser = async (token: string) => {
+  try {
+    const payload = await decrypt(token);
+    console.log(payload);
+    return payload;
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };

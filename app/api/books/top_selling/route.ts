@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
       );
 
     const data = await getTopSellingBooks();
-    return data;
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     throw error;
   }
