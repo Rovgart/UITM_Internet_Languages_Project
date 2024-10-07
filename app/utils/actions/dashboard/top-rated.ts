@@ -1,11 +1,11 @@
 "use server";
-import { topSellingBooksUrl } from "@/lib/urls";
+import { getTopRatedBooksUrl } from "@/lib/urls";
 import axios, { AxiosError } from "axios";
 import { cookies } from "next/headers";
 export const fetchTopRatedBooks = async () => {
   try {
     const token = cookies().get("AccessToken")?.value;
-    const response = await axios.get(topSellingBooksUrl, {
+    const response = await axios.get(getTopRatedBooksUrl, {
       headers: {
         Authorization: "Bearer " + token,
       },

@@ -6,9 +6,6 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
 function Header() {
   const { data } = useGetCurrentUser();
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   return (
     <header className="w-full col-[1/-1] row-[1] border flex p-2 ">
       <Container className="flex justify-around items-center gap-12">

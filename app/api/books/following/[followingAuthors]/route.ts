@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
  *   - name: Books
  *     description: Endpoints related to retrieving book collections
  *
- * /api/books/{followedAuthors}:
+ * /api/books/following/{followingAuthors}:
  *   post:
  *     tags:
  *       - Books
@@ -69,15 +69,16 @@ export async function POST(req: NextRequest) {
         { status: 405 }
       );
     }
-    if (!req.headers.has("Authorization")) {
-      return NextResponse.json(
-        { message: "Authorization failed" },
-        { status: 401 }
-      );
-    }
+    // if (!req.headers.has("Authorization")) {
+    //   return NextResponse.json(
+    //     { message: "Authorization failed" },
+    //     { status: 401 }
+    //   );
+    // }
     const { followedAuthors } = await req.json();
     const data = await getBooksByFollowedAuthors(followedAuthors);
-    return data;
+
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }

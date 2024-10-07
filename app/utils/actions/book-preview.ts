@@ -1,9 +1,14 @@
+"use server";
 import { getBookUrl } from "@/lib/urls";
 import axios, { AxiosError } from "axios";
+import { cookies, headers } from "next/headers";
 export const fetchBookPreview = async (id: string) => {
+  const token = cookies().get("AccessToken");
   try {
-    const response = await axios.get(getBookUrl, {
-      params: id,
+    const response = await axios.get(getBookUrl + `/${id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
     });
     return response.data;
   } catch (error) {

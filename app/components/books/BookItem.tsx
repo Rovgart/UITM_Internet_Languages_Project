@@ -19,7 +19,6 @@ export type BookItemProps = {
   bookDescription: string;
   bookImage: string;
   bookAuthor: string;
-  bookPrice: number;
   bookRating: number;
   bookGenres: string[];
 };

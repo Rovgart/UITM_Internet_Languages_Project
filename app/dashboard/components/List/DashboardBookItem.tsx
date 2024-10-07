@@ -21,13 +21,11 @@ const DashboardBookItem = ({
   categories: string[];
 }) => {
   return (
-    <div
-      data-book-id={id}
-      className="flex flex-col w-full max-w-[340px] gap-2 border p-4 mx-auto sm:items-center"
-    >
+    <div className="flex  flex-col w-full max-w-[340px] gap-2 border p-4 mx-auto sm:items-center">
       <div className="w-full aspect-square relative">
         <Button className="w-full h-full">
           <Image
+            data-book-id={id}
             fill
             src={image}
             alt={title}

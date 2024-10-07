@@ -23,8 +23,8 @@ function DashboardNavbar() {
       <Tabs value={currentTab} onChange={handleTabChange} variant="standard">
         <Tab value={"popular"} label="Popular" />
         <Tab value={"top_selling"} label="Top selling" />
+        <Tab value={"top_rated"} label="Top rated" />
         <Tab value={"following"} label="Following" />
-        <Tab value={"new_releases"} label="New releases" />
       </Tabs>
     </Container>
   );

@@ -9,3 +9,5 @@ export const logoutUrl = `${BASE_URL}/api/logout`;
 export const trendingAuthorsUrl = `${BASE_URL}/api/trending_authors`;
 export const booksOfFollowingAuthors = `${BASE_URL}/api/books/`;
 export const getUserUrl = `${BASE_URL}/api/user`;
+export const followAuthorUrl = `${BASE_URL}/api/authors/follow_author/`;
+export const getTopRatedBooksUrl = `${BASE_URL}/api/books/top_rated`;

@@ -10,13 +10,18 @@ import useDashboardStore from "@/store/dashboardStore";
 import {
   booksOfFollowingAuthors,
   getPopularBooksUrl,
+  getTopRatedBooksUrl,
   topSellingBooksUrl,
 } from "@/lib/urls";
 import { getBooksAction } from "@/actions/fetch-bestsellers";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 function DashboardBookList() {
   const { mutate } = useMutation({ mutationFn: fetchBook });
   const { currentTab } = useDashboardStore();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const getQueryKey = () => {
     switch (currentTab) {
@@ -24,6 +29,8 @@ function DashboardBookList() {
         return ["books", "popular"];
       case "top_selling":
         return ["books", "top_selling"];
+      case "top_rated":
+        return ["books", "top_rated"];
       case "following":
         return ["books", "following"];
       default:
@@ -37,6 +44,8 @@ function DashboardBookList() {
         return () => getBooksAction(getPopularBooksUrl);
       case "top_selling":
         return () => getBooksAction(topSellingBooksUrl);
+      case "top_rated":
+        return () => getBooksAction(getTopRatedBooksUrl);
       case "following":
         return () => getBooksAction(booksOfFollowingAuthors);
       default:
@@ -58,7 +67,7 @@ function DashboardBookList() {
     const target = e.target as HTMLElement;
     const bookId = target.dataset.bookId;
     if (bookId) {
-      mutate(bookId);
+      router.push(pathname + `/book/${bookId}`);
     }
   };
 
@@ -73,11 +82,14 @@ function DashboardBookList() {
           "sm:grid-cols-2",
           "md:grid-cols-2",
           "overflow-y-scroll",
-          "h-[620px]"
+          "h-[620px]",
+          "w-full"
         )}
       >
         {isFetching && isLoading ? (
-          <Skeleton variant="rectangular" width={573} height={900} />
+          <div className="w-full h-full col-[1/-1] flex justify-center">
+            <Skeleton variant="rectangular" width="90%" height={600} />
+          </div>
         ) : (
           books?.map((book) => (
             <DashboardBookItem
