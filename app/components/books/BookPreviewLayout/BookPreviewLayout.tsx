@@ -14,36 +14,19 @@ const BookPreviewLayout = ({
 }: BookItemProps) => {
   return (
     <>
-      {/* <Color src={bookImage}>
-        <div style={{ backgroundColor: data }}></div>
-      </Color> */}
-      <article className="flex flex-col sm:flex-row col-[2/3] gap-5 border border-slate-500">
-        {/* Book Image */}
-        <picture className="h-full self-center sm:self-start">
-          <img
-            className="w-full h-full object-cover"
-            src={`${bookImage}`}
-            alt="Book Cover"
-          ></img>
+      <article className="flex  justify-center w-full h-full border-red-500">
+        <picture>
+          <Image width={400} height={600} src={bookImage} alt={bookTitle} />
         </picture>
-        {/* Book Informations */}
-        <aside className=" sm:w-1/2 w-full p-8 flex items flex-col gap-5 sm:gap- justify-around border  text-center sm:text-start">
-          {/* Book Title */}
+        <aside className=" sm:w-1/2 w-full p-8 flex items flex-col gap-5 justify-around border  text-center sm:text-start">
           <div>
             <h2 className="text-4xl font-robotoSzef">{bookTitle}</h2>
-            {/* Book Author */}
             <p className="text-gray-400 text-2xl">{bookAuthor}</p>
           </div>
-          {/* Book Rating */}
           <StarRating rating={bookRating} />
-          {/* Book Description with Buttons */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 h-[300px] overflow-y-scroll">
             <blockquote>
               <p className="text-gray-600 text-sm leading-relaxed text-center sm:text-start">
-                {/* Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Veritatis consequatur ipsam illo, autem architecto officiis at
-                expedita! Delectus vel porro quod dolorem vitae? Animi
-                voluptatum sit modi numquam libero quidem? Quod, enim? */}
                 {bookDescription}
               </p>
             </blockquote>

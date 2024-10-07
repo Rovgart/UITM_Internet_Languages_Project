@@ -1,3 +1,4 @@
+"use client";
 import { Button, TextField } from "@mui/material";
 import Link from "next/link";
 import React from "react";
@@ -5,11 +6,13 @@ import { Dancing_Script, Roboto } from "next/font/google";
 import booksSVG from "../images/books.svg";
 import Image from "next/image";
 import { login, register } from "@/lib/lib";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import SubmitButton from "@/components/buttons/SubmitButton";
-import { cookies } from "next/headers";
-import { getUser } from "@/lib/users";
-type Props = {};
+import { Formik, Form, Field } from "formik";
+import { formSchemas } from "@/schemas/auth";
+import { signUp } from "@/actions/sign-up";
+import { routes } from "constants/routes";
+import toast from "react-hot-toast";
 const dancingScript = Dancing_Script({
   subsets: ["latin"],
   weight: "400",
@@ -20,8 +23,9 @@ const roboto = Roboto({
   weight: "400",
   variable: "--font-roboto",
 });
-
 const SignUp = () => {
+  const router = useRouter();
+  const { signUpSchema } = formSchemas();
   return (
     <main className="min-h-[88vh] grid sm:grid-cols-register_grid overflow-hidden">
       <div className="sm:flex w-screen sm:w-auto sm:items-center sm:justify-around flex-col flex gap-5  relative bg-reseda_green-900 text-reseda_green-500 h-full justify-center">
@@ -47,45 +51,61 @@ const SignUp = () => {
             Create an account
           </h1>
         </div>
-        {/* Sign Up Form */}
-        <form
-          action={async (formData: FormData) => {
-            "use server";
-            const RegisterValid = await register(formData);
-            await new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve(true);
-              }, 3000);
-            });
-            if (RegisterValid) {
-              cookies().set("session", RegisterValid.token, {
-                httpOnly: true,
-                expires: new Date(0),
-                sameSite: true,
-              });
-              console.log(RegisterValid);
-              redirect("/");
+        <Formik
+          onSubmit={async (values) => {
+            console.log(values);
+            const validSignUp = await signUp(values);
+            if (validSignUp) {
+              toast.success("Your account has been successfully created ");
+              router.push(routes.signIn);
             }
           }}
-          className="flex sm:w-1/2 w-full items-center sm:justify-center  flex-col gap-4"
+          validationSchema={signUpSchema}
+          initialValues={{
+            email: "",
+            password: "",
+            repeatPassword: "",
+          }}
         >
-          <TextField
-            id="outlined-basic"
-            label="Email"
-            name="email"
-            variant="outlined"
-            className="text-reseda_green-100 outline-reseda_green-400 focus:outline-reseda_green-900 sm:w-full w-1/2"
-          />
-          <TextField
-            className="w-1/2 sm:w-full"
-            name="password"
-            type={"password"}
-            id="standard-basic"
-            label="Password"
-            variant="outlined"
-          />
-          <SubmitButton />
-        </form>
+          {({ errors, touched }) => (
+            <Form className="flex sm:w-1/2 w-full items-center sm:justify-center  flex-col gap-4">
+              <Field
+                id="outlined-basic"
+                label="Email"
+                name="email"
+                variant="outlined"
+                va
+                className="text-reseda_green-100 outline-reseda_green-400 focus:outline-reseda_green-900 sm:w-full w-1/2"
+                as={TextField}
+                error={errors.email && touched.email}
+                helperText={touched.email && errors.email}
+              />
+              <Field
+                className="w-1/2 sm:w-full"
+                name="password"
+                type={"password"}
+                id="standard-basic"
+                label="Password"
+                variant="outlined"
+                as={TextField}
+                error={errors.password && touched.password}
+                helperText={touched.password && errors.password}
+              />
+              <Field
+                className="w-1/2 sm:w-full"
+                name="repeatPassword"
+                type="password"
+                id="standard-basic"
+                label="Repeat password"
+                variant="outlined"
+                as={TextField}
+                error={errors.repeatPassword && touched.repeatPassword}
+                helperText={touched.repeatPassword && errors.repeatPassword}
+              />
+              <SubmitButton />
+            </Form>
+          )}
+        </Formik>
         {/* Social Media Sign In */}
         <span className="absolute bottom-0 pb-2 flex justify-center gap-1 italic tracking-tight">
           Already have an account ?

@@ -1,29 +1,11 @@
-import { Collection, Db, ObjectId } from "mongodb";
-import clientPromise from "./mongodb";
+import { decrypt, getSession } from "./lib";
 
-let db: Db;
-let client;
-let users: Collection;
-export const connect = async () => {
-  if (db) return;
+export const getUser = async (token: string) => {
   try {
-    client = await clientPromise;
-    db = client.db("BookStore");
-    users = db.collection("users");
-  } catch (error: any) {
-    console.error(error?.message);
-  }
-};
-async () => {
-  await connect();
-};
-
-export const getUser = async (user_id: string) => {
-  try {
-    await connect();
-    const user = await users.findOne({ _id: new ObjectId(user_id) });
+    const user = await decrypt(token);
+    console.log(user);
     return user;
-  } catch (error: any) {
-    console.error(error?.message);
+  } catch (error) {
+    console.error(error);
   }
 };

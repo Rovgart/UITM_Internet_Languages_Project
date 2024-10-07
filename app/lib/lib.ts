@@ -1,9 +1,10 @@
+"use server";
 import { serialize } from "cookie";
 import { jwtDecrypt, JWTPayload, jwtVerify, SignJWT } from "jose";
 import { KeyLike } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { Collection, Db } from "mongodb";
+import { Collection, Db, ObjectId } from "mongodb";
 import clientPromise from "./mongodb";
 import { compare } from "bcrypt";
 import bcrypt from "bcrypt";
@@ -11,8 +12,15 @@ import bcrypt from "bcrypt";
 let client;
 let db: Db;
 let users: Collection;
-const SECRET_KEY = "secret";
+const SECRET_KEY = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(SECRET_KEY);
+const ACCESS_TOKEN_SECRET = new TextEncoder().encode(
+  process.env.ACCESS_TOKEN_SECRET
+);
+const REFRESH_TOKEN_SECRET = new TextEncoder().encode(
+  process.env.REFRESH_TOKEN_SECRET
+);
+
 export async function connect() {
   if (db) return;
   try {
@@ -39,44 +47,56 @@ export const decrypt = async (input: string): Promise<any> => {
   return payload;
 };
 
-export async function login(user: { username: string; password: string }) {
-  await connect();
-  const { email, password } = user;
+export async function login(user: { email: string; password: string }) {
+  try {
+    await connect();
+    const { email, password } = user;
+    const userExist = await users.findOne({ email: user.email });
+    if (!userExist || !(await compare(password, userExist?.hashedPassword))) {
+      return null;
+    }
+    const accessToken = await new SignJWT({ userId: userExist._id })
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime("15m")
+      .sign(ACCESS_TOKEN_SECRET);
 
-  const userExist = await users.findOne({ email: email });
+    const refreshToken = await new SignJWT({ userId: userExist._id })
+      .setExpirationTime("7d")
+      .setProtectedHeader({ alg: "HS256" })
+      .sign(REFRESH_TOKEN_SECRET);
 
-  if (userExist && (await compare(password, user.password))) {
-    // Create session
-    const expires = new Date(Date.now() + 10 * 1000);
-    const session = await encrypt({ email, expires });
-    // Save the session in the cookie
-    cookies().set("session", session, { expires: new Date(0), httpOnly: true });
-    return { token: session, user: user };
+    await users.updateOne(
+      { _id: new ObjectId(userExist._id) },
+      { $set: { refreshTokens: [refreshToken] } } // Set the refreshTokens array with only the new token
+    );
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new Error("Invalid email or password");
   }
-
-  console.error("Invalid email or password");
 }
-
-export const logout = async () => {
-  // Destroy the session
-  cookies().set("session", "", { expires: new Date(Date.now() + 15000) });
+export const logout = async (access_token: string) => {
+  try {
+    const payload = await decrypt(access_token);
+    cookies().set("session", "", { expires: new Date(Date.now() + 15000) });
+    console.log(payload);
+    console.log(
+      "Logout successful. Refresh token removed and session cleared."
+    );
+    return payload;
+  } catch (error) {
+    console.error("Error during logout:", error);
+    throw new Error("Logout failed. Please try again.");
+  }
 };
-
 export const getSession = async () => {
-  // get session from cookie
-  const session = cookies().get("session")?.value;
-  // If session not found, return null
+  const session = cookies().get("AccessToken")?.value;
+  console.log("Session", session);
   if (!session) return null;
   return await decrypt(session);
 };
-
-export const updateSessions = async (request: NextRequest) => {
-  // Checking if session exists
+export const updateSessions = async () => {
   const session = cookies().get("session")?.value;
   if (!session) return null;
-
-  // Refresh session if it doesn't expire
-
   const parsed = await decrypt(session);
   parsed.expires = new Date(Date.now() + 10 * 1000);
   const res = NextResponse.next();
@@ -92,28 +112,46 @@ export const updateSessions = async (request: NextRequest) => {
 export const register = async (formData: FormData) => {
   try {
     await connect();
-    const user = {
-      email: formData.get("email") || "",
-      password: formData.get("password") || "",
-    };
-    if (!user.email || !user.password) {
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    if (typeof email !== "string" || typeof password !== "string") {
+      throw new Error("Email and password must be strings");
+    }
+
+    if (!email || !password) {
       throw new Error("Email and password are required");
     }
-    const existingUser = await users.findOne({ email: user.email });
+
+    const existingUser = await users.findOne({ email });
     if (existingUser) {
       throw new Error("That email is already registered");
     }
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    const createdUser = {
-      email: user.email,
-      password: hashedPassword,
-      createdAt: new Date(Date.now()),
-    };
-    const insertData = await users.insertOne(createdUser);
-    const LoginValid = await login(formData);
 
-    console.log("Successfully registered");
-  } catch (error: any) {
-    console.error(error.message);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const createdUser = {
+      email,
+      password: hashedPassword,
+      createdAt: new Date(),
+    };
+    users.insertOne(createdUser);
+    return createdUser;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error("An unknown error occurred");
+    }
+    throw error;
+  }
+};
+export const getUser = async (token: string) => {
+  try {
+    const payload = await decrypt(token);
+    console.log(payload);
+    return payload;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
