@@ -20,6 +20,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { logoutUser } from "@/actions/logout";
+import { useTheme } from "@/providers/theme-provider";
 const lato = Lato({ subsets: ["latin"], weight: "400" });
 const roboto = Dancing_Script({
   subsets: ["latin"],
@@ -65,9 +66,12 @@ const Header = ({
   const handleLogout = () => {
     mutate();
   };
+  const theme = useTheme();
   return (
     <div className={lato.className}>
-      <header className="bg-tea_green p-5 text-buff-100 flex justify-around items-center  w-full">
+      <header
+        className={`p-5 text-info-main flex justify-around items-center  w-full`}
+      >
         <picture
           className={`${
             searchState ? "hidden" : "block"

@@ -26,7 +26,7 @@ const DashboardBookItem = ({
   totalRatings: number;
 }) => {
   return (
-    <div className="flex  flex-col w-full max-w-[340px] gap-2 border p-4 mx-auto sm:items-center relative">
+    <div className="flex  flex-col w-full bg-background-default rounded-xl shadow-sm shadow-primary-main max-w-[340px] gap-2 border p-4 mx-auto sm:items-center relative">
       <div className="w-full aspect-square relative border">
         {!image ? (
           <span className="text-sm text-gray-400">Missing Image</span>

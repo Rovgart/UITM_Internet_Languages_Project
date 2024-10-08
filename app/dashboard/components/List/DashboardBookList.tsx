@@ -89,7 +89,8 @@ function DashboardBookList() {
           "md:grid-cols-2",
           "overflow-y-scroll",
           "h-[620px]",
-          "w-full"
+          "w-full",
+          "gap-4"
         )}
       >
         {isFetching && isLoading ? (

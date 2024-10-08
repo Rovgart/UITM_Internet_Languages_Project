@@ -14,7 +14,7 @@ const BookPreviewLayout = ({
 }: BookItemProps) => {
   return (
     <>
-      <article className="flex md:flex-row flex-col justify-center w-full h-[570px] border-red-500">
+      <article className="flex md:flex-row flex-col justify-center w-full h-[570px]">
         <picture className="">
           {bookImage !== undefined ? (
             <Image width={374} height={300} src={bookImage} alt={bookImage} />
@@ -24,7 +24,7 @@ const BookPreviewLayout = ({
             </div>
           )}
         </picture>
-        <aside className="sm:w-1/2 w-full p-8 flex flex-col gap-5 justify-around border text-center sm:text-start">
+        <aside className="sm:w-1/2 w-full p-8 flex flex-col gap-5 justify-around border text-center sm:text-start bg-background-default">
           <div className="flex flex-col gap-2">
             <h2 className="text-2xl font-robotoSzef">{bookTitle}</h2>
             <p className="text-gray-400 text-xl w-full">{bookAuthor}</p>

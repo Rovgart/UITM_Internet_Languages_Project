@@ -9,10 +9,9 @@ import DashboardSearch from "../components/DashboardSearch";
 
 function DashboardMenu() {
   return (
-    <main className="col-[1/2] sm:block hidden border  ">
-      <List className=" sm:flex sm:flex-col" sx={{ bgcolor: "white" }}>
+    <main className="col-[1/2] sm:block hidden bg-background-default  ">
+      <List className=" sm:flex sm:flex-col">
         <DashboardSearch />
-
         <ListItemButton>
           <ListItemIcon className="flex items-center gap-2">
             <HouseIcon color="info" fontSize="large" />
