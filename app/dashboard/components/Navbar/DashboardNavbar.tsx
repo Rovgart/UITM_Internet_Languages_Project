@@ -19,8 +19,13 @@ function DashboardNavbar() {
     setCurrentTab(newValue);
   };
   return (
-    <Container className="col-[2/3] row-[1/-1] border bg-white rounded-lg">
-      <Tabs value={currentTab} onChange={handleTabChange} variant="standard">
+    <Container className="col-[2/3] row-[1/-1] border  rounded-lg">
+      <Tabs
+        value={currentTab}
+        onChange={handleTabChange}
+        variant="scrollable"
+        indicatorColor="secondary"
+      >
         <Tab value={"popular"} label="Popular" />
         <Tab value={"top_selling"} label="Top selling" />
         <Tab value={"top_rated"} label="Top rated" />

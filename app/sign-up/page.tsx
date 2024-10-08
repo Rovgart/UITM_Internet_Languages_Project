@@ -53,7 +53,6 @@ const SignUp = () => {
         </div>
         <Formik
           onSubmit={async (values) => {
-            console.log(values);
             const validSignUp = await signUp(values);
             if (validSignUp) {
               toast.success("Your account has been successfully created ");

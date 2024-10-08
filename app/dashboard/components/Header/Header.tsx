@@ -7,17 +7,17 @@ import { useGetCurrentUser } from "@/hooks/useGetCurrentUser";
 function Header() {
   const { data } = useGetCurrentUser();
   return (
-    <header className="w-full col-[1/-1] row-[1] border flex p-2 ">
+    <header className="w-full col-[1/-1] row-[1] border flex p-2 bg-background-default ">
       <Container className="flex justify-around items-center gap-12">
-        <h1>BookJourney</h1>
+        <h1 className="text-info-main font-semibold">BookJourney</h1>
         <Container className="flex items-center justify-end gap-4">
           <IconButton>
-            <NotificationsIcon fontSize="large" />
+            <NotificationsIcon fontSize="large" color="info" />
           </IconButton>
           <IconButton>
-            <DarkModeIcon />
+            <DarkModeIcon color="info" />
           </IconButton>
-          <Avatar>D</Avatar>
+          <Avatar sx={{ bgcolor: "teal" }}>D</Avatar>
         </Container>
       </Container>
     </header>

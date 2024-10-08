@@ -11,7 +11,6 @@ export const fetchTopSellingBooks = async function () {
         Authorization: "Bearer" + token,
       },
     });
-    console.log(response.data); // log the response data for debugging purposes
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {

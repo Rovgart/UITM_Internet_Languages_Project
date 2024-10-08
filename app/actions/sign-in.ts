@@ -20,7 +20,6 @@ export async function signIn(formValues: {
       rememberMe: validatedFields.rememberMe,
     };
     const response = await axiosInstance.post(signInUrl, user);
-    console.log(response.data);
     if (response.status === 200) {
       cookies().set("AccessToken", response.data?.accessToken);
       if (user.rememberMe) {

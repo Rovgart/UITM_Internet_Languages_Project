@@ -51,12 +51,12 @@ export async function GET(req: NextRequest) {
         { status: 405 }
       );
     }
-    if (!req.headers.has("Authorization")) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
+    // if (!req.headers.has("Authorization")) {
+    //   return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    // }
     const data = await getTopRated();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ message: "Server errror" }, { status: 500 });
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

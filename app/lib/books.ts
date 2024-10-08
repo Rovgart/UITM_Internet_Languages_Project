@@ -77,15 +77,31 @@ export const getBook = async (book_id: string) => {
 export const getTopRated = async () => {
   try {
     const books = await getCollection("books");
-    const newReleases = await books
-      .find({})
-      .sort({ rating: -1 })
-      .limit(50)
+    const topRatedBooks = await books
+      .aggregate([
+        {
+          // Ensure we only include documents with a valid numeric rating
+          $match: {
+            rating: { $type: "double" }, // Only include documents where rating is a double
+            genre: { $exists: true, $ne: "" }, // Ensure genre exists and is not empty
+            totalratings: { $gte: 5000 },
+          },
+        },
+        {
+          // Sort by the rating field in descending order
+          $sort: { rating: -1 },
+        },
+        {
+          // Limit the results to 50
+          $limit: 50,
+        },
+      ])
       .toArray();
-    console.log("Top rated books:", newReleases);
-    return newReleases;
+
+    return topRatedBooks;
   } catch (error) {
     console.error("Error fetching top rated books", error);
+    throw error; // Re-throw the error for proper error handling
   }
 };
 export const getBooksByFollowedAuthors = async (
@@ -104,6 +120,10 @@ export const getBooksByFollowedAuthors = async (
         };
       })
     );
+    if (followedAuthors.length === 0) {
+      return [];
+    }
+    console.log(followedBooks);
     return followedBooks;
   } catch (error) {
     console.error("Error fetching books for followed authors", error);
