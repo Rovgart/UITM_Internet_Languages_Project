@@ -18,7 +18,6 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 function DashboardBookList() {
-  const { mutate } = useMutation({ mutationFn: fetchBook });
   const { currentTab } = useDashboardStore();
   const pathname = usePathname();
   const router = useRouter();
@@ -49,7 +48,7 @@ function DashboardBookList() {
       case "following":
         return () => getBooksAction(booksOfFollowingAuthors);
       default:
-        return () => getBooksAction(getPopularBooksUrl);
+        return () => getBooksAction(getPopularBooksUrl); // Default to top selling if currentTab is not valid
     }
   };
 
@@ -66,11 +65,18 @@ function DashboardBookList() {
   const previewBookHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     const bookId = target.dataset.bookId;
+    console.log(target);
     if (bookId) {
       router.push(pathname + `/book/${bookId}`);
     }
   };
-
+  if (books?.length === 0 || !books) {
+    return (
+      <div className="flex items-center justify-center  col-[1/-1] text-gray-400 w-full h-full">
+        No books available{" "}
+      </div>
+    );
+  }
   return (
     <Container className={cn("col-span-full")}>
       <div
@@ -99,6 +105,8 @@ function DashboardBookList() {
               image={book.img}
               author={book.author}
               categories={book.genre}
+              rating={book.rating}
+              totalRatings={book?.totalratings}
             />
           ))
         )}

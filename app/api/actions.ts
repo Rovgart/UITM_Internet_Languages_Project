@@ -28,8 +28,6 @@ export const fetchBook = async (bookName: string) => {
       );
     }
     const data = await response.json();
-    console.log(response);
-    console.log(data);
     if (data) {
       return data;
     }

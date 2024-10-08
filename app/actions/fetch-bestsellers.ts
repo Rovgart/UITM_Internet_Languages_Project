@@ -6,17 +6,25 @@ import { cookies } from "next/headers";
 export const getBooksAction = async (
   url: string,
   urlParam?: string
-): Promise<BestsellersResponse[] | undefined> => {
+): Promise<BestsellersResponse[] | null> => {
   try {
     const token = cookies().get("AccessToken")?.value;
-    const res = await axios.get(url + `${urlParam ? urlParam : ""}`, {
+
+    // Fetching data from the API
+    const res = await axios.get(url + (urlParam ? urlParam : ""), {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
-    const bestsellers = res.data.map((book: Book) => {
+
+    if (!res.data || res.data.length === 0) {
+      return null;
+    }
+
+    // Map over the data if it's not empty
+    const books = res.data.map((book: Book) => {
       const genreArr = book.genre?.split(",");
-      const bestsellersObj = {
+      const bookModified = {
         id: String(book._id),
         title: book.title,
         description: book.desc,
@@ -24,15 +32,20 @@ export const getBooksAction = async (
         genre: genreArr.slice(0, 3),
         author: book.author,
         rating: book.rating,
+        totalratings: book.totalratings,
       };
-      return bestsellersObj;
+      return bookModified;
     });
-    return bestsellers;
+
+    console.log(res.data);
+    return books;
   } catch (error) {
+    // Handle Axios errors specifically
     if (error instanceof AxiosError) {
       throw new Error(error?.response?.data?.message);
     } else {
-      throw new Error("Unexpected error occurred");
+      // Throw any other unhandled errors
+      throw error;
     }
   }
 };

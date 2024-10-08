@@ -92,6 +92,8 @@ const page = ({ params }: { params: { _id: string } }) => {
           bookDescription={book?.desc}
           bookImage={book?.img}
           bookAuthor={book?.author}
+          bookRating={book?.rating}
+          totalRatings={book?.totalratings}
         />
       )}
     </>

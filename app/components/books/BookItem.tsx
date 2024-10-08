@@ -21,6 +21,7 @@ export type BookItemProps = {
   bookAuthor: string;
   bookRating: number;
   bookGenres: string[];
+  totalRatings: number;
 };
 
 const BookItem = ({

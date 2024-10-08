@@ -1,29 +1,34 @@
 import StarRating from "@/components/StarRating/StarRating";
-import useColor, { Color } from "color-thief-react";
 import Image from "next/image";
-import React from "react";
-import SampleCover from "../../../assets/enceladus.avif";
+import React, { useEffect } from "react";
 import { BookItemProps } from "../bookItem";
 import BookPreviewButtons from "../BookPreviewButtons/BookPreviewButtons";
+
 const BookPreviewLayout = ({
   bookTitle,
   bookAuthor,
   bookRating,
+  totalRatings,
   bookImage,
   bookDescription,
 }: BookItemProps) => {
   return (
     <>
-      <article className="flex  justify-center w-full h-full border-red-500">
-        <picture>
-          <Image width={400} height={600} src={bookImage} alt={bookTitle} />
+      <article className="flex md:flex-row flex-col justify-center w-full h-[570px] border-red-500">
+        <picture className="">
+          {bookImage !== undefined ? (
+            <Image width={374} height={300} src={bookImage} alt={bookImage} />
+          ) : (
+            <div className="text-pretty text-xl flex w-full h-full justify-center items-center">
+              Missing image
+            </div>
+          )}
         </picture>
-        <aside className=" sm:w-1/2 w-full p-8 flex items flex-col gap-5 justify-around border  text-center sm:text-start">
-          <div>
-            <h2 className="text-4xl font-robotoSzef">{bookTitle}</h2>
-            <p className="text-gray-400 text-2xl">{bookAuthor}</p>
+        <aside className="sm:w-1/2 w-full p-8 flex flex-col gap-5 justify-around border text-center sm:text-start">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-2xl font-robotoSzef">{bookTitle}</h2>
+            <p className="text-gray-400 text-xl w-full">{bookAuthor}</p>
           </div>
-          <StarRating rating={bookRating} />
           <div className="flex flex-col gap-3 h-[300px] overflow-y-scroll">
             <blockquote>
               <p className="text-gray-600 text-sm leading-relaxed text-center sm:text-start">
@@ -31,6 +36,7 @@ const BookPreviewLayout = ({
               </p>
             </blockquote>
           </div>
+          <StarRating rating={bookRating} totalRatings={totalRatings} />
           <BookPreviewButtons />
         </aside>
       </article>

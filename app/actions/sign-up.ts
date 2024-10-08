@@ -11,7 +11,6 @@ export const signUp = async (formValues: {
   try {
     const response = await axios.post(signUpUrl, formValues);
     if (response.status === 200) {
-      console.log("Successfully signed up!");
       return response.data;
     }
   } catch (error) {
