@@ -57,17 +57,15 @@ export async function login(user: { email: string; password: string }) {
     }
     const accessToken = await new SignJWT({ userId: userExist._id })
       .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("15m")
+      .setExpirationTime("5m") // Set to 5 minutes
       .sign(ACCESS_TOKEN_SECRET);
-
     const refreshToken = await new SignJWT({ userId: userExist._id })
       .setExpirationTime("7d")
       .setProtectedHeader({ alg: "HS256" })
       .sign(REFRESH_TOKEN_SECRET);
-
     await users.updateOne(
       { _id: new ObjectId(userExist._id) },
-      { $set: { refreshTokens: [refreshToken] } } // Set the refreshTokens array with only the new token
+      { $set: { refreshTokens: [refreshToken] } }
     );
     return { accessToken, refreshToken };
   } catch (error) {
