@@ -131,6 +131,7 @@ export const register = async (formData: FormData) => {
       email,
       password: hashedPassword,
       createdAt: new Date(),
+      readBooks: [],
     };
     users.insertOne(createdUser);
     return createdUser;

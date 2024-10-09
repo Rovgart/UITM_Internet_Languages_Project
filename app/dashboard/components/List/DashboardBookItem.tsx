@@ -4,9 +4,12 @@ import { Button } from "@mui/material";
 import Image from "next/image";
 import React from "react";
 import CategoryChipList from "../Chip/CategoryChipList";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useGetBooks } from "@/hooks/useGetBooks";
 import StarRating from "@/components/StarRating/StarRating";
+import MarkAsReadButton from "../Buttons/MarkAsReadButton";
+import { updateBookStatus } from "@/utils/actions/books/update-book-status";
+import toast from "react-hot-toast";
 
 const DashboardBookItem = ({
   id,
@@ -25,6 +28,16 @@ const DashboardBookItem = ({
   rating: number;
   totalRatings: number;
 }) => {
+  const { mutate, data, isSuccess, isPending } = useMutation({
+    mutationKey: ["book", id],
+    mutationFn: () => updateBookStatus(id),
+    onSuccess: () => {
+      toast.success("Book marked as read");
+    },
+  });
+  const handleUpdateStatus = () => {
+    mutate(id);
+  };
   return (
     <div className="flex  flex-col w-full bg-background-default rounded-xl shadow-sm shadow-primary-main max-w-[340px] gap-2 border p-4 mx-auto sm:items-center relative">
       <div className="w-full aspect-square relative border">
@@ -50,6 +63,10 @@ const DashboardBookItem = ({
         <CategoryChipList categories={categories} />
         <StarRating rating={rating} totalRatings={totalRatings} />
       </div>
+      <MarkAsReadButton
+        handleReadClick={handleUpdateStatus}
+        isPending={isPending}
+      />
     </div>
   );
 };

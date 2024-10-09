@@ -60,8 +60,6 @@ function Header() {
           <IconButton>
             <DarkModeIcon color="info" />
           </IconButton>
-
-          <Avatar sx={{ bgcolor: "teal" }}>D</Avatar>
           <Button
             id="basic-button"
             aria-controls={open ? "basic-menu" : undefined}

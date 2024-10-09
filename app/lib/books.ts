@@ -2,6 +2,7 @@ import { Collection, Db, ObjectId } from "mongodb";
 import clientPromise from "./mongodb";
 import { getCollection } from "./connect";
 import { followingAuthorsT } from "@/types/types";
+import { decrypt, getSession } from "./lib";
 
 export async function getBooks() {
   try {
@@ -141,5 +142,26 @@ export const getMostPopularBooks = async () => {
     return result;
   } catch (error) {
     console.error("Error fetching most popular books", error);
+  }
+};
+export const markBookAsRead = async (bookId: string, token: string) => {
+  const session = await getSession();
+  console.log(session);
+  const bookObjectId = new ObjectId(bookId);
+  const users = await getCollection("users");
+  console.log(token);
+  const result = await users.updateOne(
+    { _id: bookObjectId },
+    { $addToSet: { readBooks: bookObjectId } }
+  );
+
+  if (result.modifiedCount === 1) {
+    console.log(
+      `Book with id ${bookId} was successfully marked as read for user ${userObjectId}`
+    );
+  } else {
+    console.log(
+      `Book with id ${bookId} was already marked as read for user ${userObjectId}`
+    );
   }
 };
