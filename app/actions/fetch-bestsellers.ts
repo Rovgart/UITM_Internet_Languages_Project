@@ -21,7 +21,6 @@ export const getBooksAction = async (
       return null;
     }
 
-    // Map over the data if it's not empty
     const books = res.data.map((book: Book) => {
       const genreArr = book.genre?.split(",");
       const bookModified = {
@@ -37,7 +36,6 @@ export const getBooksAction = async (
       return bookModified;
     });
 
-    console.log(res.data);
     return books;
   } catch (error) {
     // Handle Axios errors specifically

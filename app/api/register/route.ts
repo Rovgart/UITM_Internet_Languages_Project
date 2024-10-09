@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { registerUserToDatabase } from "@/lib/register";
+import { register } from "@/lib/lib";
 /**
  * @swagger
  * tags:
@@ -48,11 +49,9 @@ import { registerUserToDatabase } from "@/lib/register";
  */
 export const POST = async (req: NextRequest) => {
   try {
-    const { email, password } = await req.json();
-    const data = await registerUserToDatabase(email, password);
-    if (data) {
-      return data;
-    }
+    const data = await req.json();
+    const result = await register(data);
+    return NextResponse.json(result, { status: 200 });
   } catch (error: any) {
     console.error(error?.message);
     return NextResponse.json({ message: error.message }, { status: 500 });

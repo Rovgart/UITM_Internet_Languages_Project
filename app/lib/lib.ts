@@ -107,11 +107,9 @@ export const updateSessions = async () => {
   return res;
 };
 
-export const register = async (formData: FormData) => {
+export const register = async (data: { email: string; password: string }) => {
   try {
-    await connect();
-    const email = formData.get("email");
-    const password = formData.get("password");
+    const { email, password } = data;
 
     if (typeof email !== "string" || typeof password !== "string") {
       throw new Error("Email and password must be strings");
@@ -133,8 +131,8 @@ export const register = async (formData: FormData) => {
       createdAt: new Date(),
       readBooks: [],
     };
-    users.insertOne(createdUser);
-    return createdUser;
+    const result = await users.insertOne(createdUser);
+    console.log("Insert result:", result);
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(error.message);

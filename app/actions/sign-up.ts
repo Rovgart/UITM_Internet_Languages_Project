@@ -13,9 +13,11 @@ export const signUp = async (formValues: {
     if (response.status === 200) {
       return response.data;
     }
+    console.log(response.data);
+    return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      throw error;
+      throw new Error(error.response?.data?.message);
     } else {
       throw new Error("Unexpected error occurred");
     }

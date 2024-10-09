@@ -25,6 +25,7 @@ export async function signIn(formValues: {
       if (user.rememberMe) {
         cookies().set("RefreshToken", response.data?.refreshToken);
       }
+      console.log(response.data);
       return response.data;
     }
   } catch (error) {

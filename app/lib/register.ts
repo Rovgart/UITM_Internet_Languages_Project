@@ -52,10 +52,6 @@ export const registerUserToDatabase = async (
     const UserSendToDb = await userCollection.insertOne(newUser);
     return NextResponse.json(UserSendToDb, { status: 200 });
   } catch (error: any) {
-    console.error(error?.message);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    throw error;
   }
 };
