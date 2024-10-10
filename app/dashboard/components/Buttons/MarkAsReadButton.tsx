@@ -1,8 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
 
-type Props = {};
-
 const MarkAsReadButton = ({
   handleReadClick,
   isPending,
@@ -18,9 +16,9 @@ const MarkAsReadButton = ({
       variant={`${isSuccess ? "outlined" : "contained"}`}
       size="small"
       onClick={handleReadClick}
-      disabled={isPending}
+      disabled={isPending || isSuccess}
     >
-      Mark as Read
+      {isSuccess ? "Read" : "Mark as read"}
     </Button>
   );
 };

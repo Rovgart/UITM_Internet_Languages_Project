@@ -67,6 +67,7 @@ const DashboardBookItem = ({
       <MarkAsReadButton
         handleReadClick={handleUpdateStatus}
         isPending={isPending}
+        isSuccess={isSuccess}
       />
     </div>
   );
