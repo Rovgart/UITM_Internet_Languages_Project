@@ -1,18 +1,12 @@
 "use server";
 import { updateBookStatusUrl } from "@/lib/urls";
-import axios, { AxiosError, isAxiosError } from "axios";
-// import { cookies, headers } from "next/headers";
+import axiosInstance from "@/utils/axiosInstance";
+import { AxiosError } from "axios";
 
 export async function updateBookStatus(id: string) {
   try {
-    // const token = cookies().get("AccessToken")?.value;
-    const response = await axios.post(updateBookStatusUrl, {
-      headers: {
-        Authorization: "Bearer " + "Kuraklajksdjfasldkf",
-        "Content-Type": "application/json",
-      },
-    });
-
+    const response = await axiosInstance.post(updateBookStatusUrl, { id });
+    console.log(id);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {

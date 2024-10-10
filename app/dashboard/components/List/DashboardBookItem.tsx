@@ -36,6 +36,7 @@ const DashboardBookItem = ({
     },
   });
   const handleUpdateStatus = () => {
+    console.log(id);
     mutate(id);
   };
   return (

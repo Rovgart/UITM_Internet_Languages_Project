@@ -29,7 +29,7 @@ export const registerUserToDatabase = async (
 
   if (!user.email || !user.password) {
     return NextResponse.json(
-      { error: "Email and password are required" },
+      { message: "Email and password are required" },
       { status: 400 }
     );
   }
@@ -37,10 +37,7 @@ export const registerUserToDatabase = async (
   try {
     const existingUser = await userCollection.findOne({ email });
     if (existingUser) {
-      return NextResponse.json(
-        { error: "That email is already registered" },
-        { status: 400 }
-      );
+      throw new Error("This email is already registered");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = {

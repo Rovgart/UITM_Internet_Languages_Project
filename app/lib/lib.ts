@@ -7,6 +7,7 @@ import clientPromise from "./mongodb";
 import { compare } from "bcrypt";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import { getCollection } from "./connect";
 dotenv.config();
 
 let client;
@@ -32,9 +33,6 @@ export async function connect() {
   }
 }
 (async () => {
-  console.log("SECRET_KEY:", key);
-  console.log("ACCESS_TOKEN_SECRET:", ACCESS_TOKEN_SECRET);
-  console.log("REFRESH_TOKEN_SECRET:", REFRESH_TOKEN_SECRET);
   await connect();
 })();
 export const encrypt = async (payload: JWTPayload) => {
@@ -55,9 +53,9 @@ export const decrypt = async (input: string): Promise<any> => {
 export async function login(user: { email: string; password: string }) {
   try {
     await connect();
-    const { email, password } = user;
+    const { password } = user;
     const userExist = await users.findOne({ email: user.email });
-    if (!userExist || !(await compare(password, userExist?.hashedPassword))) {
+    if (!userExist || !(await compare(password, userExist?.password))) {
       return null;
     }
     const accessToken = await new SignJWT({ userId: userExist._id })
@@ -74,7 +72,7 @@ export async function login(user: { email: string; password: string }) {
     );
     return { accessToken, refreshToken };
   } catch (error) {
-    throw new Error("Invalid email or password");
+    throw error;
   }
 }
 export const logout = async (access_token: string) => {
@@ -92,26 +90,20 @@ export const logout = async (access_token: string) => {
   }
 };
 export const getSession = async () => {
-  const cookieStore = cookies();
-  const session = cookieStore.get("AccessToken")?.value;
-  console.log(session);
-
-  if (!session) {
-    throw new Error("Unauthorized: No Access Token");
-  }
-
   try {
-    // Use proper secret/public key for verification
-    const verified = await jwtVerify(session, ACCESS_TOKEN_SECRET, {
-      algorithms: ["HS256"], // Match your signing algorithm
+    const session = cookies().get("AccessToken")?.value;
+    if (!session) {
+      return null;
+    }
+    const { payload } = await jwtVerify(session, ACCESS_TOKEN_SECRET, {
+      algorithms: ["HS256"],
     });
-    return verified;
+    return payload;
   } catch (error) {
     console.error("JWT verification error: ", error);
-    throw new Error("Unauthorized: Token verification failed");
+    return null;
   }
 };
-
 export const updateSessions = async () => {
   const session = cookies().get("session")?.value;
   if (!session) return null;
@@ -130,20 +122,10 @@ export const updateSessions = async () => {
 export const register = async (data: { email: string; password: string }) => {
   try {
     const { email, password } = data;
-
-    if (typeof email !== "string" || typeof password !== "string") {
-      throw new Error("Email and password must be strings");
-    }
-
-    if (!email || !password) {
-      throw new Error("Email and password are required");
-    }
-
     const existingUser = await users.findOne({ email });
     if (existingUser) {
       throw new Error("That email is already registered");
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
     const createdUser = {
       email,
@@ -151,15 +133,16 @@ export const register = async (data: { email: string; password: string }) => {
       createdAt: new Date(),
       readBooks: [],
     };
+
     const result = await users.insertOne(createdUser);
-    console.log("Insert result:", result);
+
+    return { success: true, userId: result.insertedId.toString() };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(error.message);
+      throw new Error(error.message);
     } else {
-      console.error("An unknown error occurred");
+      throw new Error("An unexpected error occurred");
     }
-    throw error;
   }
 };
 
@@ -198,6 +181,31 @@ export const getUser = async (token: string) => {
     } else {
       console.error("An unknown error occurred");
     }
+    throw error;
+  }
+};
+export const markBookAsRead = async (bookId: string, token: string) => {
+  try {
+    const session = await jwtVerify(token, ACCESS_TOKEN_SECRET, {
+      algorithms: ["HS256"],
+    });
+    console.log(session);
+    const bookObjectId = new ObjectId(bookId);
+    const users = await getCollection("users");
+    console.log(bookObjectId);
+    const result = await users.updateOne(
+      { _id: new ObjectId(session?.payload?.userId) },
+      { $addToSet: { readBooks: bookObjectId } }
+    );
+    console.log(result);
+    if (result.modifiedCount === 0) {
+      console.log("No changes made; the book may already be in readBooks.");
+    } else {
+      console.log("Book marked as read successfully.");
+    }
+
+    return result;
+  } catch (error) {
     throw error;
   }
 };

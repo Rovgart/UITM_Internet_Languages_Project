@@ -49,11 +49,39 @@ import { register } from "@/lib/lib";
  */
 export const POST = async (req: NextRequest) => {
   try {
+    if (req.method !== "POST") {
+      return NextResponse.json(
+        { message: "Method not allowed" },
+        { status: 405 }
+      );
+    }
     const data = await req.json();
+    if (!data) {
+      return NextResponse.json(
+        { message: "Invalid request body" },
+        { status: 400 }
+      );
+    }
+    const { email, password } = data;
+    if (!email || !password) {
+      return NextResponse.json(
+        { message: "Missing email or password" },
+        { status: 400 }
+      );
+    }
+    if (typeof email !== "string" || typeof password !== "string") {
+      return NextResponse.json(
+        { message: "Invalid email or password format" },
+        { status: 400 }
+      );
+    }
     const result = await register(data);
     return NextResponse.json(result, { status: 200 });
   } catch (error: any) {
     console.error(error?.message);
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: "This email is already registered" },
+      { status: 500 }
+    );
   }
 };

@@ -1,4 +1,4 @@
-import { markBookAsRead } from "@/lib/books";
+import { markBookAsRead } from "@/lib/lib";
 import { NextRequest, NextResponse } from "next/server";
 /**
  * @swagger
@@ -76,16 +76,19 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { id } = await req.json();
-    const authHeader = req.headers.get("Authorization");
-    const token = authHeader ? authHeader.split(" ")[1] : null; // Extract token from Bearer format
+    if (!req.headers.has("Authorization")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     if (req.method !== "POST") {
       return NextResponse.json(
         { message: "Method not allowed" },
         { status: 405 }
       );
     }
-    console.log(req.headers);
+    const { id } = await req.json();
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) return null;
+    const token = authHeader.split(" ")[1];
     const data = await markBookAsRead(id, token);
     return NextResponse.json(data, {
       status: 200,

@@ -30,6 +30,7 @@ export async function signIn(formValues: {
         secure: true,
         sameSite: "strict",
         path: "/",
+        maxAge: 60 * 15,
       });
 
       if (user.rememberMe) {
@@ -38,7 +39,7 @@ export async function signIn(formValues: {
           secure: true,
           sameSite: "strict",
           path: "/",
-          maxAge: 60 * 60 * 24 * 7, // 1 week expiration
+          maxAge: 60 * 60 * 24 * 7,
         });
       }
 
