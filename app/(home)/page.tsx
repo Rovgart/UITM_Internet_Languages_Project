@@ -1,8 +1,6 @@
 import React from "react";
-import Books from "@/components/books/Books";
-import { cn } from "@/utils/cn";
 
-type Props = {};
+import { cn } from "@/utils/cn";
 
 const page = () => {
   return (

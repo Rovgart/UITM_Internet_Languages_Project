@@ -1,3 +1,4 @@
+import { decrypt, getSession, getUser } from "@/lib/lib";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -11,10 +12,15 @@ export async function GET(req: NextRequest) {
 
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { message: "Authorization header not found" },
+        { status: 401 }
+      );
     }
 
     const token = authHeader.split(" ")[1];
+    console.log(token);
+    const payload = await getUser(token);
     if (!token) {
       return NextResponse.json(
         { message: "Invalid token format" },
@@ -61,17 +67,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
-
-// In your users.ts file
-import { decrypt } from "@/lib/lib";
-
-export const getUser = async (token: string) => {
-  try {
-    const payload = await decrypt(token);
-    console.log(payload);
-    return payload;
-  } catch (error) {
-    console.error("Error in getUser:", error);
-    throw error; // Rethrow the error to be caught in the route handler
-  }
-};

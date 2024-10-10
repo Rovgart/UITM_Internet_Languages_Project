@@ -1,36 +1,52 @@
 "use server";
+
 import { BASE_URL } from "@/lib/urls";
-import axios, { AxiosRequestConfig, RawAxiosRequestConfig } from "axios";
+import axios from "axios";
 import { cookies } from "next/headers";
+
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
 });
-// Add a request interceptor
-axios.interceptors.request.use(
-  function (request) {
-    const accessToken = cookies().get("accessToken");
+
+axiosInstance.interceptors.request.use(
+  function (config) {
+    const cookieStore = cookies();
+    const accessToken = cookieStore.get("AccessToken")?.value;
+
     if (accessToken) {
-      request.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
-    // Do something before request is sent
-    return request;
+    return config;
   },
   function (error) {
-    // Do something with request error
     return Promise.reject(error);
   }
 );
 
 // Add a response interceptor
-axios.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
     return response;
   },
   function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          console.error("Unauthorized access");
+          break;
+        case 404:
+          console.error("Resource not found");
+          break;
+        default:
+          console.error("An error occurred:", error.response.status);
+      }
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+    } else {
+      console.error("Error setting up request:", error.message);
+    }
     return Promise.reject(error);
   }
 );
+
+export default axiosInstance;

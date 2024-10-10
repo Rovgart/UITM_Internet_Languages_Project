@@ -4,8 +4,7 @@ import React from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import Loader from "../loader/Loader";
 
-const SubmitButton = () => {
-  const { pending } = useFormStatus();
+const SubmitButton = ({ pending }: { pending?: boolean }) => {
   return (
     <Button
       variant="contained"

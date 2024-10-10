@@ -1,6 +1,6 @@
 import StarRating from "@/components/StarRating/StarRating";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 import { BookItemProps } from "../bookItem";
 import BookPreviewButtons from "../BookPreviewButtons/BookPreviewButtons";
 

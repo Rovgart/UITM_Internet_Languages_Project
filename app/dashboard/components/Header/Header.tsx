@@ -46,9 +46,6 @@ function Header() {
   const handleLogout = () => {
     mutate();
   };
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   return (
     <header className="w-full col-[1/-1] row-[1] border flex p-2 bg-background-default ">
       <Container className="flex justify-around items-center gap-12">
@@ -107,7 +104,7 @@ function Header() {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={handleClose}>
-              <Avatar /> Profile
+              <Avatar /> {data?.email}
             </MenuItem>
             <Divider />
             <MenuItem onClick={handleClose}>

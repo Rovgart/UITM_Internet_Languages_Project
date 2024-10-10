@@ -1,6 +1,6 @@
 import { followAuthorUrl } from "@/lib/urls";
 import axios, { AxiosError } from "axios";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 
 export async function followAuthor(id: string) {
   const token = cookies().get("AccessToken")?.value;

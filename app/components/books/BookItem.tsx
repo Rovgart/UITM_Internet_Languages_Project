@@ -1,14 +1,11 @@
 "use client";
 import React from "react";
-import StarRating from "../StarRating/StarRating";
-import { Roboto_Mono } from "next/font/google";
 import PreviewButton from "../buttons/PreviewButton";
 import {
   Button,
   Card,
   CardActions,
   CardContent,
-  CardHeader,
   CardMedia,
   Typography,
 } from "@mui/material";
@@ -28,12 +25,9 @@ const BookItem = ({
   bookId,
   bookTitle,
   bookImage,
-  bookAuthor,
-  bookRating,
-  bookGenres,
+
   bookDescription,
 }: BookItemProps) => {
-  // const price = `${bookPrice.toFixed(2)} zl`;
   const getFirstSentence = (bookDesc: string) => {
     const firstSentenceEnd = bookDesc?.indexOf(".") + 1;
     if (firstSentenceEnd === 0) return bookDesc;

@@ -1,21 +1,16 @@
 "use server";
 import { BestsellersResponse } from "@/types/types";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { Book } from "@/types/types";
-import { cookies } from "next/headers";
+
+import { axiosInstance } from "@/utils/axiosInstance";
 export const getBooksAction = async (
   url: string,
   urlParam?: string
 ): Promise<BestsellersResponse[] | null> => {
   try {
-    const token = cookies().get("AccessToken")?.value;
-
     // Fetching data from the API
-    const res = await axios.get(url + (urlParam ? urlParam : ""), {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const res = await axiosInstance.get(url + (urlParam ? urlParam : ""));
 
     if (!res.data || res.data.length === 0) {
       return null;

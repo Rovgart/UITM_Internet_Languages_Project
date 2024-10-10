@@ -2,9 +2,8 @@
 import { getCookie, setCookie } from "cookies-next";
 import React, { useEffect, useState } from "react";
 import Modal from "../Modal/Modal";
-type Props = {};
 
-const CookiePopUp = (props: Props) => {
+const CookiePopUp = () => {
   const [showBanner, setShowBanner] = useState(false);
   // After refresh checks, whether the user has already have cookies or
   useEffect(() => {

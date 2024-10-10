@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup"; // Import Yup for validation
-import { cn } from "@/utils/cn";
+
 import {
   Checkbox,
   Divider,
@@ -17,20 +16,22 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/actions/sign-in";
 import { routes } from "constants/routes";
-import { MdRememberMe } from "react-icons/md";
+
 const LogForm = () => {
   const router = useRouter();
   const { mutate, isPending } = useMutation({
     mutationFn: signIn,
     onSuccess: () => {
-      toast.success("Successfully Registered");
+      toast.success("Successfully Signed In");
       router.push(routes.dashboard);
     },
     onError: (error) => {
-      toast.error(error?.message);
+      toast.error(error?.message || "An error occurred during sign in");
     },
   });
+
   const { signInSchema } = formSchemas();
+
   return (
     <div className="flex items-center border h-full flex-col justify-center w-full">
       <h1 className="text-4xl font-bold text-midnight_green-700">Sign In</h1>
@@ -38,29 +39,31 @@ const LogForm = () => {
         initialValues={{
           email: "",
           password: "",
-          rememberMe: false,
+          rememberMe: true,
         }}
         validationSchema={signInSchema}
-        onSubmit={async (values) => {
+        onSubmit={(values) => {
           console.log(values);
           mutate(values);
         }}
       >
-        {({ errors, touched }) => (
-          <Form className={cn("flex flex-col p-4 gap-2")}>
+        {({ errors, touched, values, setFieldValue }) => (
+          <Form className="flex flex-col p-4 gap-2">
             <label htmlFor="email">Email</label>
             <Field
               as={TextField}
+              id="email"
               name="email"
               variant="outlined"
               fullWidth
-              error={touched.email && !!errors.email} // Error handling with Material-UI's TextField
-              helperText={touched.email && errors.email} // Display error message
+              error={touched.email && !!errors.email}
+              helperText={touched.email && errors.email}
             />
 
             <label htmlFor="password">Password</label>
             <Field
               as={TextField}
+              id="password"
               name="password"
               type="password"
               variant="outlined"
@@ -69,19 +72,30 @@ const LogForm = () => {
               helperText={touched.password && errors.password}
             />
 
-            <div className="flex items-center">
-              <FormGroup>
-                <FormControlLabel
-                  control={<Checkbox defaultChecked />}
-                  label="Remember Me"
-                />
-              </FormGroup>
-            </div>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Field
+                    as={Checkbox}
+                    type="checkbox"
+                    name="rememberMe"
+                    checked={values.rememberMe}
+                    onChange={() =>
+                      setFieldValue("rememberMe", !values.rememberMe)
+                    }
+                  />
+                }
+                label="Remember Me"
+              />
+            </FormGroup>
+
             <Divider />
+
             <div>
               <div className="g-signin2" data-onsuccess="onSignIn"></div>
             </div>
-            <SubmitButton />
+
+            <SubmitButton pending={isPending} />
           </Form>
         )}
       </Formik>

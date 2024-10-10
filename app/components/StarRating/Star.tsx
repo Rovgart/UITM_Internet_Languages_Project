@@ -2,8 +2,6 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
 import { FaStarHalf } from "react-icons/fa";
-import { CiStar } from "react-icons/ci";
-type Props = {};
 
 const Star = ({ filled, half }: { filled: boolean; half: boolean }) => {
   if (filled) {

@@ -1,7 +1,5 @@
 "use server";
-import { logout } from "@/lib/lib";
 import { logoutUrl } from "@/lib/urls";
-import { axiosInstance } from "@/utils/axiosInstance";
 import axios, { AxiosError } from "axios";
 import { cookies } from "next/headers";
 
