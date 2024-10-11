@@ -1,7 +1,7 @@
 "use server";
 import { signUpUrl } from "@/lib/urls";
 import axiosInstance from "@/utils/axiosInstance";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 
 export const signUp = async (formValues: {
   email: string;
