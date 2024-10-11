@@ -5,7 +5,6 @@ import Image from "next/image";
 import React from "react";
 import CategoryChipList from "../Chip/CategoryChipList";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useGetBooks } from "@/hooks/useGetBooks";
 import StarRating from "@/components/StarRating/StarRating";
 import MarkAsReadButton from "../Buttons/MarkAsReadButton";
 import { updateBookStatus } from "@/utils/actions/books/update-book-status";
@@ -28,7 +27,7 @@ const DashboardBookItem = ({
   rating: number;
   totalRatings: number;
 }) => {
-  const { mutate, data, isSuccess, isPending } = useMutation({
+  const { mutate, isSuccess, isPending } = useMutation({
     mutationKey: ["book", id],
     mutationFn: () => updateBookStatus(id),
     onSuccess: () => {
@@ -36,7 +35,6 @@ const DashboardBookItem = ({
     },
   });
   const handleUpdateStatus = () => {
-    console.log(id);
     mutate(id);
   };
   return (

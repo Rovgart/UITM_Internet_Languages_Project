@@ -1,15 +1,6 @@
 "use client";
-import { Box, Container, Tab, Tabs } from "@mui/material";
-import React, { useState } from "react";
-import DashboardBookList from "../List/DashboardBookList";
-import { useGetBooks } from "@/hooks/useGetBooks";
-import { getBooks } from "@/lib/books";
-import {
-  getPopularBooksUrl,
-  topSellingBooksUrl,
-  trendingAuthorsUrl,
-  booksOfFollowingAuthors,
-} from "@/lib/urls";
+import { Container, Tab, Tabs } from "@mui/material";
+import React from "react";
 import useDashboardStore from "@/store/dashboardStore";
 function DashboardNavbar() {
   const { currentTab, setCurrentTab } = useDashboardStore();
@@ -30,6 +21,7 @@ function DashboardNavbar() {
         <Tab value={"top_selling"} label="Top selling" />
         <Tab value={"top_rated"} label="Top rated" />
         <Tab value={"following"} label="Following" />
+        <Tab value={"read_books"} label="Read books" />
       </Tabs>
     </Container>
   );

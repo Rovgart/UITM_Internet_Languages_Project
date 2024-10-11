@@ -3,7 +3,7 @@ import clientPromise from "../lib/mongodb";
 export async function connect(
   db: Db,
   client: MongoClient,
-  collectionName: string,
+  collectionName: Collection<Document>,
   databaseName: string
 ) {
   if (db) return;

@@ -1,4 +1,4 @@
-import { decrypt, getSession } from "./lib";
+import { decrypt } from "./lib";
 
 export const getUser = async (token: string) => {
   try {

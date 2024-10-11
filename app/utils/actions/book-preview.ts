@@ -1,7 +1,7 @@
 "use server";
 import { getBookUrl } from "@/lib/urls";
 import axios, { AxiosError } from "axios";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 export const fetchBookPreview = async (id: string) => {
   const token = cookies().get("AccessToken");
   try {

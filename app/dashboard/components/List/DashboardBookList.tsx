@@ -4,13 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import DashboardBookItem from "./DashboardBookItem";
 import { cn } from "@/utils/cn";
-import { useMutation } from "@tanstack/react-query";
-import { fetchBook } from "@/api/actions";
 import useDashboardStore from "@/store/dashboardStore";
 import {
   booksOfFollowingAuthors,
   getPopularBooksUrl,
   getTopRatedBooksUrl,
+  readBooksUrl,
   topSellingBooksUrl,
 } from "@/lib/urls";
 import { getBooksAction } from "@/actions/fetch-bestsellers";
@@ -32,6 +31,8 @@ function DashboardBookList() {
         return ["books", "top_rated"];
       case "following":
         return ["books", "following"];
+      case "read_books":
+        return () => ["books", "read_books"];
       default:
         return ["books", "popular"];
     }
@@ -47,6 +48,8 @@ function DashboardBookList() {
         return () => getBooksAction(getTopRatedBooksUrl);
       case "following":
         return () => getBooksAction(booksOfFollowingAuthors);
+      case "read_books":
+        return () => getBooksAction(readBooksUrl);
       default:
         return () => getBooksAction(getPopularBooksUrl); // Default to top selling if currentTab is not valid
     }
@@ -55,7 +58,6 @@ function DashboardBookList() {
   const {
     data: books,
     isLoading,
-    error,
     isFetching,
   } = useQuery({
     queryKey: getQueryKey(),
@@ -73,7 +75,7 @@ function DashboardBookList() {
   if (books?.length === 0 || !books) {
     return (
       <div className="flex items-center justify-center  col-[1/-1] text-gray-400 w-full h-full">
-        No books available{" "}
+        No books available
       </div>
     );
   }

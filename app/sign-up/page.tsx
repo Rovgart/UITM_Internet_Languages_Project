@@ -1,12 +1,11 @@
 "use client";
-import { Button, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import { Dancing_Script, Roboto } from "next/font/google";
 import booksSVG from "../images/books.svg";
 import Image from "next/image";
-import { login, register } from "@/lib/lib";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import SubmitButton from "@/components/buttons/SubmitButton";
 import { Formik, Form, Field } from "formik";
 import { formSchemas } from "@/schemas/auth";

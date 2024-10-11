@@ -13,3 +13,4 @@ export const followAuthorUrl = `${BASE_URL}/api/authors/follow_author/`;
 export const getTopRatedBooksUrl = `${BASE_URL}/api/books/top_rated`;
 export const refreshTokenUrl = `${BASE_URL}/api/refresh_token`;
 export const updateBookStatusUrl = `${BASE_URL}/api/books/mark`;
+export const readBooksUrl = `${BASE_URL}/api/books/read_books`;

@@ -8,6 +8,8 @@ import { compare } from "bcrypt";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { getCollection } from "./connect";
+import { getBook } from "./books";
+import books from "@/images/books";
 dotenv.config();
 
 let client;
@@ -190,22 +192,55 @@ export const markBookAsRead = async (bookId: string, token: string) => {
       algorithms: ["HS256"],
     });
     console.log(session);
-    const bookObjectId = new ObjectId(bookId);
+
+    const book = await getBook(bookId);
+    if (!book) {
+      throw new Error("Book not found");
+    }
+
     const users = await getCollection("users");
-    console.log(bookObjectId);
+
     const result = await users.updateOne(
       { _id: new ObjectId(session?.payload?.userId) },
-      { $addToSet: { readBooks: bookObjectId } }
+      {
+        $addToSet: {
+          readBooks: {
+            ...book,
+          },
+        },
+      }
     );
+
     console.log(result);
     if (result.modifiedCount === 0) {
       console.log("No changes made; the book may already be in readBooks.");
     } else {
       console.log("Book marked as read successfully.");
     }
-
     return result;
   } catch (error) {
+    console.error("Error marking book as read:", error);
+    throw error;
+  }
+};
+export const retrieveReadBooksByUser = async (token: string) => {
+  try {
+    const session = await jwtVerify(token, ACCESS_TOKEN_SECRET, {
+      algorithms: ["HS256"],
+    });
+    console.log(session);
+
+    const users = await getCollection("users");
+    const user = await users.findOne({
+      _id: new ObjectId(session?.payload?.userId),
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user.readBooks;
+  } catch (error) {
+    console.error("Error retrieving read books:", error);
     throw error;
   }
 };

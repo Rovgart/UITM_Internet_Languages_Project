@@ -3,7 +3,7 @@
 import { booksOfFollowingAuthors } from "@/lib/urls";
 import { followingAuthorsT } from "@/types/types";
 import axios, { AxiosError } from "axios";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 
 export const fetchFollowing = async (followingAuthors: followingAuthorsT[]) => {
   try {
