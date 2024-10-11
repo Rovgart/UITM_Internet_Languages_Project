@@ -17,8 +17,7 @@ export const GET = async (req: NextRequest) => {
     }
     const MostPopularBooks = await getMostPopularBooks();
     return NextResponse.json(MostPopularBooks, { status: 200 });
-  } catch (error: any) {
-    console.error(error);
+  } catch (error) {
     return NextResponse.json(
       { message: "Server error", error },
       { status: 500 }

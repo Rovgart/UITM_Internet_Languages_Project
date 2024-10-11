@@ -1,10 +1,9 @@
 "use client";
 import { Dancing_Script, Lato } from "next/font/google";
 import Link from "next/link";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useState } from "react";
 
 import { GiHamburgerMenu } from "react-icons/gi";
-import Search from "./search/search";
 import { routes } from "constants/routes";
 import {
   Avatar,
@@ -20,21 +19,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { logoutUser } from "@/actions/logout";
-import { useTheme } from "@/providers/theme-provider";
 const lato = Lato({ subsets: ["latin"], weight: "400" });
 const roboto = Dancing_Script({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-dancingScript",
 });
-const Header = ({
-  children,
-  auth,
-}: {
-  children?: ReactNode;
-  auth?: ReactNode;
-}) => {
-  const [headerState, setHeaderState] = useState({
+const Header = ({}: { children?: ReactNode; auth?: ReactNode }) => {
+  const [headerState] = useState({
     hamburgerState: false,
     searchState: false,
   });
@@ -48,7 +40,7 @@ const Header = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { data, isPending, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: ["user"],
     queryFn: getUser,
   });
@@ -66,12 +58,9 @@ const Header = ({
   const handleLogout = () => {
     mutate();
   };
-  const theme = useTheme();
   return (
     <div className={lato.className}>
-      <header
-        className={`p-5 text-info-main flex justify-around items-center  w-full`}
-      >
+      <header className={`p-5  flex justify-around items-center  w-full`}>
         <picture
           className={`${
             searchState ? "hidden" : "block"

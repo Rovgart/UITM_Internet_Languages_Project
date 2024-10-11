@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import Image from "next/image";
 import React from "react";
 import CategoryChipList from "../Chip/CategoryChipList";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import StarRating from "@/components/StarRating/StarRating";
 import MarkAsReadButton from "../Buttons/MarkAsReadButton";
 import { updateBookStatus } from "@/utils/actions/books/update-book-status";

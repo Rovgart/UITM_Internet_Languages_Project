@@ -1,11 +1,9 @@
 "use server";
-import React, { useEffect } from "react";
+import React from "react";
 import DashboardNavbar from "./components/Navbar/DashboardNavbar";
 import { cn } from "@/utils/cn";
 import { Container } from "@mui/material";
 
-import { useQuery } from "@tanstack/react-query";
-import { fetchTrendingAuthors } from "@/utils/actions/authors/trending-authors";
 
 import TrendingAuthorsCard from "./components/Header/TrendingAuthor/TrendingAuthorsCard";
 import DashboardBookList from "./components/List/DashboardBookList";

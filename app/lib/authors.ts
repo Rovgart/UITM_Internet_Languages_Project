@@ -1,4 +1,4 @@
-import { Collection, Db, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { getCollection } from "./connect";
 
 export async function getTrendingAuthors() {

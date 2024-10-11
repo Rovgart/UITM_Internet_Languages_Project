@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { registerUserToDatabase } from "@/lib/register";
 import { register } from "@/lib/lib";
 /**
  * @swagger

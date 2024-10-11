@@ -1,11 +1,11 @@
 "use client";
-import BookItem from "@/components/books/bookItem";
+
 import BookPreviewLayout from "@/components/books/BookPreviewLayout/BookPreviewLayout";
 import { Skeleton } from "@mui/material";
 import { useGetBook } from "@/hooks/useGetBook";
-import React, { useEffect } from "react";
+import React from "react";
 
-const page = ({ params }: { params: { _id: string } }) => {
+const BookPreviewPage = ({ params }: { params: { _id: string } }) => {
   const { data: book, isFetching, isLoading } = useGetBook(params._id);
   return (
     <>
@@ -100,4 +100,4 @@ const page = ({ params }: { params: { _id: string } }) => {
   );
 };
 
-export default page;
+export default BookPreviewPage;

@@ -18,7 +18,6 @@ const CookiePopUp = () => {
       document.body.style.overflow = "hidden";
     }
   };
-  const preventScrolling = () => {};
   const handleAccept = () => {
     setCookie("cookie_consent", "accepted", {
       expires: new Date(Date.now() + 960000),

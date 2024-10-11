@@ -1,14 +1,12 @@
+"use server";
 import { followAuthorUrl } from "@/lib/urls";
-import axios, { AxiosError } from "axios";
-import { cookies } from "next/headers";
+import axiosInstance from "@/utils/axiosInstance";
+import { AxiosError } from "axios";
 
 export async function followAuthor(id: string) {
-  const token = cookies().get("AccessToken")?.value;
   try {
-    const response = await axios.post(followAuthorUrl, {
-      headers: {
-        Authorization: "Bearer" + token,
-      },
+    const response = await axiosInstance.post(followAuthorUrl, {
+      id,
     });
     return response.data;
   } catch (error) {

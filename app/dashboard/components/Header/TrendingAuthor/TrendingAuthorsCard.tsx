@@ -7,11 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@mui/material";
 
 function TrendingAuthorsCard() {
-  const {
-    data: TrendingAuthors,
-    isFetching,
-    isLoading,
-  } = useQuery({
+  const { data: TrendingAuthors, isFetching } = useQuery({
     queryKey: ["trendingAuthors"],
     queryFn: () => fetchTrendingAuthors(),
   });

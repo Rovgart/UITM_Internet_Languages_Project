@@ -9,7 +9,7 @@ import {
   Divider,
   ListItemIcon,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LogoutIcon from "@mui/icons-material/Logout";

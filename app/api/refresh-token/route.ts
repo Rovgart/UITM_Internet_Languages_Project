@@ -48,9 +48,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    if (!req.headers.has("Authorization")) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
     if (!req.headers.get("Authorization")?.startsWith("Bearer")) {
       return NextResponse.json(
         { message: "Invalid authorization token format" },

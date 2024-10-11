@@ -4,9 +4,8 @@ import { Button } from "@mui/material";
 import Image from "next/image";
 import { Images } from "./url/urls";
 import Header from "./components/header";
-type Props = {};
 
-const page = () => {
+const AppPage = () => {
   const { landingSvg } = Images;
   return (
     <>
@@ -28,7 +27,7 @@ const page = () => {
             voluptate iste possimus quaerat?
           </span>
           <Button color="info" size="large" variant="contained">
-            Let's go
+            Lets go
           </Button>
         </section>
 
@@ -41,4 +40,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default AppPage;

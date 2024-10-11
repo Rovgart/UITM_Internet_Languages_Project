@@ -1,9 +1,7 @@
 "use server";
-import { Collection, Db, ObjectId } from "mongodb";
-import clientPromise from "./mongodb";
+import { ObjectId } from "mongodb";
 import { getCollection } from "./connect";
 import { followingAuthorsT } from "@/types/types";
-import { decrypt, getSession } from "./lib";
 
 export async function getBooks() {
   try {

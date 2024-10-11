@@ -9,7 +9,6 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { getCollection } from "./connect";
 import { getBook } from "./books";
-import books from "@/images/books";
 dotenv.config();
 
 let client;
@@ -107,18 +106,24 @@ export const getSession = async () => {
   }
 };
 export const updateSessions = async () => {
-  const session = cookies().get("session")?.value;
-  if (!session) return null;
-  const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + 10 * 1000);
-  const res = NextResponse.next();
-  res.cookies.set({
-    name: "session",
-    value: await encrypt(parsed),
-    expires: parsed.expires,
-    httpOnly: true,
-  });
-  return res;
+  try {
+    const session = cookies().get("RefreshToken")?.value;
+    if (!session) return null;
+    const parsed = await jwtVerify(session, REFRESH_TOKEN_SECRET, {
+      algorithms: ["HS256"],
+    });
+    parsed.payload.exp = new Date(Date.now() + 10 * 1000);
+    const res = NextResponse.next();
+    res.cookies.set({
+      name: "session",
+      value: await encrypt(parsed),
+      expires: parsed.expires,
+      httpOnly: true,
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const register = async (data: { email: string; password: string }) => {
@@ -241,6 +246,19 @@ export const retrieveReadBooksByUser = async (token: string) => {
     return user.readBooks;
   } catch (error) {
     console.error("Error retrieving read books:", error);
+    throw error;
+  }
+};
+
+export const verifyProtectedRoute = async (token: string) => {
+  try {
+    const verification = await jwtVerify(token, ACCESS_TOKEN_SECRET, {
+      algorithms: ["HS256"],
+    });
+    if (verification.payload) {
+      return true;
+    }
+  } catch (error) {
     throw error;
   }
 };

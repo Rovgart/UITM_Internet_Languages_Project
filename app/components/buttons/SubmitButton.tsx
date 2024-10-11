@@ -1,8 +1,6 @@
 "use client";
 import { Button } from "@mui/material";
 import React from "react";
-import { useFormState, useFormStatus } from "react-dom";
-import Loader from "../loader/Loader";
 
 const SubmitButton = ({ pending }: { pending?: boolean }) => {
   return (

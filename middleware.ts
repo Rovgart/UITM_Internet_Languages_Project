@@ -1,7 +1,4 @@
-import { cookies } from "next/headers";
-import { usePathname } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
-import React from "react";
 
 type Props = {};
 

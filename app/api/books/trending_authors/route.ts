@@ -48,9 +48,19 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export async function GET(req: NextRequest) {
   try {
-    const authors = await getTrendingAuthors(); // Fetch the trending authors
+    if (req.method !== "GET") {
+      return NextResponse.json(
+        { message: "Method not allowed" },
+        { status: 405 }
+      );
+    }
+    if (!req.headers.has("Unauthorized")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const authors = await getTrendingAuthors();
     console.log(authors);
-    return NextResponse.json({ authors }, { status: 200 }); // Return the authors in the response
+    return NextResponse.json({ authors }, { status: 200 });
   } catch (error) {
     console.error("Error fetching trending authors:", error);
     return NextResponse.json(

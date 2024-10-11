@@ -1,4 +1,4 @@
-import { decrypt, getSession, getUser } from "@/lib/lib";
+import { getUser } from "@/lib/lib";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -20,7 +20,6 @@ export async function GET(req: NextRequest) {
 
     const token = authHeader.split(" ")[1];
     console.log(token);
-    const payload = await getUser(token);
     if (!token) {
       return NextResponse.json(
         { message: "Invalid token format" },

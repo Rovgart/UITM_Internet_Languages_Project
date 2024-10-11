@@ -43,7 +43,7 @@ import { NextRequest, NextResponse } from "next/server";
  *         description: Internal server error.
  */
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader || !authHeader?.startsWith("Bearer")) {
