@@ -16,17 +16,24 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/actions/sign-in";
 import { routes } from "constants/routes";
+import useAuthStore from "@/store/AuthStore";
 
 const LogForm = () => {
+  const { setTokens, accessToken, refreshToken } = useAuthStore();
   const router = useRouter();
   const { mutate, isPending } = useMutation({
     mutationFn: signIn,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data);
       toast.success("Successfully Signed In");
+      setTokens(data?.AccessToken, data?.RefreshToken);
       router.push(routes.dashboard);
     },
     onError: (error) => {
       toast.error(error?.message || "An error occurred during sign in");
+    },
+    onSettled: () => {
+      console.log(accessToken, refreshToken);
     },
   });
 

@@ -19,9 +19,10 @@ import { logoutUser } from "@/actions/logout";
 import toast from "react-hot-toast";
 import { routes } from "constants/routes";
 import { useMutation } from "@tanstack/react-query";
+import useAuthStore from "@/store/AuthStore";
 function Header() {
   const { data } = useGetCurrentUser();
-
+  const { clearTokens } = useAuthStore();
   const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -38,6 +39,7 @@ function Header() {
     onSuccess: () => {
       toast.success("User logged out ");
       router.push(routes.signIn);
+      clearTokens();
     },
     onError: (error: any) => {
       toast.error(error?.message);
