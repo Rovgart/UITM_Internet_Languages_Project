@@ -1,34 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 
-type Props = {};
-
 async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
-  const protectedRoutes = ["/l", "/r"];
-  const publicRoutes = ["/sign-in", "/sign-up"];
-  const session = req.cookies.get("access_token")?.value;
-  if (session && req.nextUrl.pathname === "/home") {
+  const session = req.cookies.get("AccessToken")?.value;
+
+  const publicRoutes = ["/home", "/sign-in", "/sign-up"];
+  const protectedRoutes = ["/dashboard", "/dashboard/book"];
+  const isProtectedRoute = (path: string) => {
+    return (
+      protectedRoutes.some((route) => path.startsWith(route)) ||
+      path.match(/^\/dashboard\/book\/[\w-]+$/)
+    );
+  };
+
+  if (session && url.pathname === "/home") {
     url.pathname = "/";
     return NextResponse.redirect(url);
   }
-  if (protectedRoutes.includes(url.pathname) && !session) {
+
+  if (isProtectedRoute(url.pathname) && !session) {
     url.pathname = "/sign-in";
     return NextResponse.redirect(url);
   }
+
   if (publicRoutes.includes(url.pathname) && session) {
     url.pathname = "/";
     return NextResponse.redirect(url);
   }
+
+  return NextResponse.next();
 }
+
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-     */
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };
