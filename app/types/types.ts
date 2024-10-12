@@ -13,12 +13,14 @@ export type Book = {
   totalratings: number;
 };
 export type BestsellersResponse = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   img: string;
   genre: string[];
   author: string;
+  rating: number;
+  totalratings: number;
 };
 export type RegisterResponse = {
   email: string;

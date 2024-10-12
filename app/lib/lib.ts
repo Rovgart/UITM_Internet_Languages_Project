@@ -105,26 +105,6 @@ export const getSession = async () => {
     return null;
   }
 };
-export const updateSessions = async () => {
-  try {
-    const session = cookies().get("RefreshToken")?.value;
-    if (!session) return null;
-    const parsed = await jwtVerify(session, REFRESH_TOKEN_SECRET, {
-      algorithms: ["HS256"],
-    });
-    parsed.payload.exp = new Date(Date.now() + 10 * 1000);
-    const res = NextResponse.next();
-    res.cookies.set({
-      name: "session",
-      value: await encrypt(parsed),
-      expires: parsed.expires,
-      httpOnly: true,
-    });
-    return res;
-  } catch (error) {
-    throw error;
-  }
-};
 
 export const register = async (data: { email: string; password: string }) => {
   try {
@@ -191,12 +171,17 @@ export const getUser = async (token: string) => {
     throw error;
   }
 };
+
 export const markBookAsRead = async (bookId: string, token: string) => {
   try {
     const session = await jwtVerify(token, ACCESS_TOKEN_SECRET, {
       algorithms: ["HS256"],
     });
-    console.log(session);
+
+    const userId = session.payload?.userId;
+    if (typeof userId !== "string") {
+      throw new Error("Invalid user ID");
+    }
 
     const book = await getBook(bookId);
     if (!book) {
@@ -204,25 +189,20 @@ export const markBookAsRead = async (bookId: string, token: string) => {
     }
 
     const users = await getCollection("users");
-
     const result = await users.updateOne(
-      { _id: new ObjectId(session?.payload?.userId) },
+      { _id: new ObjectId(userId) },
       {
         $addToSet: {
-          readBooks: {
-            ...book,
-          },
+          readBooks: book,
         },
       }
     );
 
-    console.log(result);
     if (result.modifiedCount === 0) {
-      console.log("No changes made; the book may already be in readBooks.");
-    } else {
-      console.log("Book marked as read successfully.");
+      throw new Error("User not found or book already marked as read");
     }
-    return result;
+
+    return { success: true, message: "Book marked as read successfully" };
   } catch (error) {
     console.error("Error marking book as read:", error);
     throw error;
@@ -234,10 +214,13 @@ export const retrieveReadBooksByUser = async (token: string) => {
       algorithms: ["HS256"],
     });
     console.log(session);
-
+    const userId = session.payload?.userId;
+    if (typeof userId !== "string") {
+      throw new Error("Invalid user ID");
+    }
     const users = await getCollection("users");
     const user = await users.findOne({
-      _id: new ObjectId(session?.payload?.userId),
+      _id: new ObjectId(userId),
     });
 
     if (!user) {

@@ -94,6 +94,7 @@ const BookPreviewPage = ({ params }: { params: { _id: string } }) => {
           bookAuthor={book?.author}
           bookRating={book?.rating}
           totalRatings={book?.totalratings}
+          bookGenres={book?.genre}
         />
       )}
     </>

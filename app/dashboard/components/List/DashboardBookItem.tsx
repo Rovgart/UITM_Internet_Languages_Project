@@ -29,7 +29,7 @@ const DashboardBookItem = ({
 }) => {
   const { mutate, isSuccess, isPending } = useMutation({
     mutationKey: ["book", id],
-    mutationFn: () => updateBookStatus(id),
+    mutationFn: updateBookStatus,
     onSuccess: () => {
       toast.success("Book marked as read");
     },
